@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ brewery }} Beers</title>
+</head>
+<body>
+<h2>{{ brewery }} Beers</h2>
+<ul>
+{% for beer in beers %}
+	<li>{{ beer[0] }}</li>
+{% endfor %}
+</ul>
+</body>
+</html>

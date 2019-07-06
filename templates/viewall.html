@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>View All</title>
+</head>
+<body>
+<table>
+	<thead>
+		<tr>
+			<th>Brewery</th>
+			<th>Distributor</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for brewery in breweries %}
+		<tr>
+			<td><a href="/breweries/?brewery={{ brewery[1] }}">{{ brewery[1] }}</a></td>
+			<td>{{ brewery[2] }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+<a href="/">Back</a>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ brewery }}</title>
+</head>
+<body>
+	<h1>{{ brewery }}</h1>
+	<h2>Distributor: {{ distributor }}</h2>
+	<h2>Beers</h2>
+	<ul>
+	{% for beer in beers %}
+		<li><a href="/beers/?beer={{ beer[0] }}">{{ beer[0] }}</a></li>
+	{% endfor %}
+	</ul>
+	<a href="/update/?brewery={{ brewery }}">Update distributor</a>
+	<a href="/add_beer/?brewery={{ brewery }}">Add a beer</a>
+	<a href="/view_all">Back</a>
+</body>
+</html>

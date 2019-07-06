@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Update {{ brewery }}</title>
+</head>
+<body>
+	<p>{{ brewery }}</p>
+	<form action="/update/?brewery={{ brewery }}" method="post">
+	<select name="distributor">
+		{% for distributor in distributors %}
+		<option value="{{ distributor[0] }}">{{ distributor[0] }}</option>
+		{% endfor %}
+	</select>
+	<button type="submit">Update</button>
+</form>
+</body>
+</html>
