@@ -5,7 +5,9 @@
 	{% block main %}
 	<h1>{{ brewery }}</h1>
 	<form action="/add_beer/?brewery={{ brewery }}" method="post">
-		<input type="text" name="new_beer">
-		<button type="submit">Add beer</button>
+		<div class="form-group">
+			<input class="form-control" type="text" name="new_beer">
+		</div>
+		<button class="btn btn-primary" type="submit">Add beer</button>
 	</form>
 	{% endblock %}

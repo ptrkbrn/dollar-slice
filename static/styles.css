@@ -1,8 +1,9 @@
+body {
+	text-align: center;
+	align-items: center;
+}
+
 main .form-control {
 	display: inline-block;
 	width: auto;
-}
-
-main {
-	text-align: center;
 }

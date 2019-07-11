@@ -5,11 +5,13 @@
 	{% block main %}
 	<p>{{ brewery }}</p>
 	<form action="/update/?brewery={{ brewery }}" method="post">
-		<select name="distributor">
-			{% for distributor in distributors %}
-			<option value="{{ distributor[0] }}">{{ distributor[0] }}</option>
-			{% endfor %}
-		</select>
-		<button type="submit">Update</button>
+		<div class="form-group">
+			<select class="form-control" name="distributor">
+				{% for distributor in distributors %}
+				<option value="{{ distributor[0] }}">{{ distributor[0] }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<button class="btn btn-primary" type="submit">Update</button>
 	</form>
 	{% endblock %}

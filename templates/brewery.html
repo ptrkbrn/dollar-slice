@@ -6,7 +6,7 @@
 	<h1>{{ brewery }}</h1>
 	<h2>Distributor: {{ distributor }}</h2>
 	<h2>Beers</h2>
-	<ul>
+	<ul class="list-unstyled">
 	{% for beer in beers %}
 		<li><a href="{{ brewery }}/beers/{{ beer[0] }}">{{ beer[0] }}</a></li>
 	{% endfor %}

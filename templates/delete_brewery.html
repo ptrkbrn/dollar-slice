@@ -5,10 +5,12 @@
 	{% block main %}
 	<h1>Delete a brewery!</h1>
 	<form action="/delete_brewery" method="post">
-		<label for="brewery">Enter a brewery:</label>
-		<input type="text" name="brewery" id="brewery">
-		<button type="submit">Delete</button>
+		<div class="form-group">
+			<label for="brewery">Enter a brewery:</label>
+			<input class="form-control" type="text" name="brewery" id="brewery">
+		</div>
+		<button class="btn btn-primary" type="submit">Delete</button>
 	</form>
 
-	<a href="/view_all">Back</a>
+	<a href="/">Back</a>
 	{% endblock %}
