@@ -143,7 +143,7 @@ finally:
     def results():
         """Displays search results"""
         searched = request.args.get("brewery")
-        cursor.execute("SELECT name FROM breweries WHERE name LIKE '%%%s%%'" % searched)
+        cursor.execute("SELECT name FROM breweries WHERE name ILIKE '%%%s%%'" % searched)
         results = cursor.fetchall()
         return render_template("results.html", searched=searched, results=results)
 
