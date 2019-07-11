@@ -6,7 +6,7 @@
 	<h1>{{ brewery }}</h1>
 	<form action="/add_beer/?brewery={{ brewery }}" method="post">
 		<div class="form-group">
-			<input class="form-control" type="text" name="new_beer">
+			<input class="form-control" type="text" name="new_beer" autofocus autocomplete="off" placeholder="Beer name">
 		</div>
 		<button class="btn btn-primary" type="submit">Add beer</button>
 	</form>

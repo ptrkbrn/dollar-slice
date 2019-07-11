@@ -3,11 +3,10 @@
 	{% block title %}Delete a brewery{% endblock %}
 
 	{% block main %}
-	<h1>Delete a brewery!</h1>
+	<h1>Delete a brewery</h1>
 	<form action="/delete_brewery" method="post">
 		<div class="form-group">
-			<label for="brewery">Enter a brewery:</label>
-			<input class="form-control" type="text" name="brewery" id="brewery">
+			<input class="form-control" type="text" name="brewery" id="brewery" autofocus autocomplete="off" placeholder="Brewery">
 		</div>
 		<button class="btn btn-primary" type="submit">Delete</button>
 	</form>
