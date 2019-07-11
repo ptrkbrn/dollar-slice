@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Search</title>
-</head>
-<body>
+{% extends 'layout.html' %}
+
+	{% block title %}Search{% endblock %}
+	
+	{% block main %}
 	<h1>Search for a Brewery</h1>
-	<form action="/breweries/", method="get">
+	<form action="/results/", method="get">
 		<input type="text" name="brewery">
 		<button type="submit">Search</button>
 	</form>
 	<a href="/">Back</a>
-</body>
-</html>
+	{% endblock %}

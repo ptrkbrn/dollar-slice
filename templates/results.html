@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+	{% block title %}Search Results{% endblock %}
+
+	{% block main %}
+		<h1>Search Results for: {{ searched }}</h1>
+		{% if results|length == 0 %}
+		<p>No breweries found!</p>
+		{% else %}
+		<ul>
+			{% for result in results %}
+			<li><a href="/breweries/{{ result[0] }}">{{ result[0] }}</a></li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+		<a href="/search">Back</a>
+	{% endblock %}

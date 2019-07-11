@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Add a Beer to {{ brewery }}</title>
-</head>
-<body>
-<h1>{{ brewery }}</h1>
-<form action="/beer_added/?brewery={{ brewery }}" method="post">
-	<input type="text" name="new_beer">
-	<button type="submit">Add beer</button>
-</form>
-</body>
-</html>
+{% extends 'layout.html' %}
+
+	{% block title %}Add a Beer to {{ brewery }}{% endblock %}
+	
+	{% block main %}
+	<h1>{{ brewery }}</h1>
+	<form action="/add_beer/?brewery={{ brewery }}" method="post">
+		<input type="text" name="new_beer">
+		<button type="submit">Add beer</button>
+	</form>
+	{% endblock %}

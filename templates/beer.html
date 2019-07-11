@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>{{ brewery }} - {{ beername[1] }}</title>
-</head>
-<body>
-<h1>{{ brewery }}</h1>
-<h2>{{ beername[1] }}</h2>
-<a href="/breweries/?brewery={{ brewery }}">Back</a>
-</body>
-</html>
+{% extends 'layout.html' %}
+
+	{% block title %}{ brewery }} - {{ beername[1] }}{% endblock %}
+
+	{% block main %}
+	<h1>{{ brewery }}</h1>
+	<h2>{{ beername[1] }}</h2>
+	<a href="/breweries/{{ brewery }}">Back</a>
+	{% endblock %}

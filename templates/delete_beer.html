@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+	{% block title %}Delete a beer{% endblock %}
+
+	{% block main %}
+	<h1>{{ brewery }}</h1>
+	<form action="/delete_beer" method="post">
+		<label for="delete">Select a beer to delete: </label>
+		<select id="delete" name="delete">
+			{% for beer in beers %}
+			<option value="{{ beer[0] }}">{{ beer[0] }}</option>
+			{% endfor %}
+		</select>
+		<button type="submit">Delete</button>
+	</form>
+	{% endblock %}

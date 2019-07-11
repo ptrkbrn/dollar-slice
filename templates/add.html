@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Add a Brewery</title>
-</head>
-<body>
+{% extends 'layout.html' %}
+
+	{% block title %}Add a Brewery{% endblock %}
+	
+	{% block main %}
 	<form action="/add_brewery" method="POST">
-		<input type="text" name="brewery">
-		<input type="text" name="distributor">
+		<label for="brewery">Brewery:</label>
+		<input type="text" id="brewery" name="brewery" autofocus autocomplete="off">
+		<label for="distributor">Distributor:</label>
+		<input type="text" id="distributor" name="distributor">
 		<button type="submit">Add</button>
 	</form>
 	<a href="/">Back</a>
-</body>
-</html>
+	{% endblock %}
