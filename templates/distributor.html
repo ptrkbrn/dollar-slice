@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ distributor }}{% endblock %}
+
+{% block main %}
+<h1>{{ distributor }}</h1>
+
+<table class="table">
+	<thead>
+		<td><strong>Beers</strong></td>
+	</thead>
+	<tbody>
+		{% for brewery in breweries %}
+		<tr>
+			<td><a href="/breweries/{{ brewery[1] }}">{{ brewery[1] }}</a></td>
+		</tr>
+		{% endfor %}		
+	</tbody>
+</table>
+<a href="/view_all">Back</a>
+{% endblock %}

@@ -194,6 +194,16 @@ finally:
                                    beers=beers,
                                    distributor=selected_brewery[2])
 
+    @app.route('/distributors/<distributor>')
+    @login_required
+    def show_distributor_page(distributor):
+        """Shows page for specified distributor"""
+        cursor.execute("SELECT * FROM breweries WHERE distributor = $$%s$$" % distributor)
+        breweries = cursor.fetchall()
+        url_for('show_distributor_page', distributor=breweries[0][2])
+        return render_template('distributor.html', breweries=breweries,
+                                                   distributor=breweries[0][2])
+
     @app.route('/breweries/<brewery>/beers/<beer>')
     @login_required
     def show_beer_page(brewery, beer):

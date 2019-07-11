@@ -16,7 +16,7 @@
 		{% for brewery in breweries %}
 			<tr>
 				<td><a href="/breweries/{{ brewery[1] }}">{{ brewery[1] }}</a></td>
-				<td>{{ brewery[2] }}</td>
+				<td><a href="/distributors/{{ brewery[2] }}">{{ brewery[2] }}</a></td>
 			</tr>
 		{% endfor %}
 		</tbody>
