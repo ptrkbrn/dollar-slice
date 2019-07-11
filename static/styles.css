@@ -2,7 +2,10 @@ body {
 	text-align: center;
 	align-items: center;
 }
-
+footer {
+	color: grey;
+	font-size: 12px;
+}
 main .form-control {
 	display: inline-block;
 	width: auto;
