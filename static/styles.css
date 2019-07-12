@@ -1,12 +1,37 @@
 body {
 	text-align: center;
 	align-items: center;
+	height: 100vh;
 }
 footer {
 	color: grey;
 	font-size: 12px;
 }
+
+main {
+	height: 100%;
+}
+
+main .card {
+	padding: 10%;
+	-webkit-box-shadow: 10px 10px 37px 5px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 37px 5px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 37px 5px rgba(0,0,0,0.75);
+}
+
 main .form-control {
 	display: inline-block;
 	width: auto;
 }
+
+main #login-bg {
+	background-image: url(https://source.unsplash.com/nhX8QhXMBkM);
+}
+
+/*main .splash {
+	display: block;
+	height: 100%;
+	width: 100%;
+	background-image: url(https://source.unsplash.com/nhX8QhXMBkM);
+	z-index: -100;
+}*/

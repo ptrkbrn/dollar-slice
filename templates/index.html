@@ -5,10 +5,12 @@
 	{% block main %}
 	<h1>Welcome!</h1>
 	<h4>Pick an option to get started.</h4>
-	<ul class="list-unstyled">
-		<li><a class="btn btn-primary btn-lg btn-block" href="/view_all">View all</a></li>
-		<li><a class="btn btn-danger btn-lg btn-block" href="/search">Lookup a Brewery</a></li>
-		<li><a class="btn btn-success btn-lg btn-block" href="/add_brewery">Add a Brewery</a></li>
-		<li><a class="btn btn-warning btn-lg btn-block" href="/delete_brewery">Delete a Brewery</a></li>
-	</ul>
+	<div class="row">
+		<div class="col-md-6 m-auto">
+			<a class="btn btn-primary btn-lg btn-block" href="/view_all">View all</a>
+			<a class="btn btn-danger btn-lg btn-block" href="/search">Lookup a Brewery</a>
+			<a class="btn btn-success btn-lg btn-block" href="/add_brewery">Add a Brewery</a>
+			<a class="btn btn-warning btn-lg btn-block" href="/delete_brewery">Delete a Brewery</a>
+		</div>
+	</div>
 	{% endblock %}
