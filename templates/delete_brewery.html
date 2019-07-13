@@ -4,9 +4,12 @@
 
 	{% block main %}
 	<h1>Delete a brewery</h1>
-	<form action="/delete_brewery" method="post">
+	<form class="needs-validation" action="/delete_brewery" method="post" novalidate>
 		<div class="form-group">
-			<input class="form-control" type="text" name="brewery" id="brewery" autofocus autocomplete="off" placeholder="Brewery">
+			<input class="form-control" type="text" name="brewery" id="brewery" autofocus autocomplete="off" placeholder="Brewery" required>
+			<div class="invalid-feedback">
+				Enter a brewery name
+			</div>
 		</div>
 		<button class="btn btn-warning" type="submit">Delete</button>
 	</form>

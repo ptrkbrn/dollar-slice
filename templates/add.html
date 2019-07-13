@@ -3,12 +3,18 @@
 	{% block title %}Add a Brewery{% endblock %}
 	
 	{% block main %}
-	<form action="/add_brewery" method="POST">
+	<form class="needs-validation" action="/add_brewery" method="POST" novalidate>
 		<div class="form-group">
-			<input class="form-control" type="text" id="brewery" name="brewery" autofocus autocomplete="off" placeholder="Brewery">
+			<input class="form-control" type="text" id="brewery" name="brewery" autofocus autocomplete="off" placeholder="Brewery" required>
+			<div class="invalid-feedback">
+				Enter a brewery name
+			</div>
 		</div>
 		<div class="form-group">
-			<input class="form-control" type="text" id="distributor" name="distributor" placeholder="Distributor">
+			<input class="form-control" type="text" id="distributor" name="distributor" placeholder="Distributor" required>
+			<div class="invalid-feedback">
+				Enter a distributor
+			</div>
 		</div>
 		<button class="btn btn-success" type="submit">Add</button>
 	</form>
