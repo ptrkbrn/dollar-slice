@@ -3,8 +3,8 @@
 	{% block title %}Add a Beer to {{ brewery }}{% endblock %}
 	
 	{% block main %}
-	<h1>{{ brewery }}</h1>
-	<form class="needs-validation" action="/add_beer/?brewery={{ brewery }}" method="post" novalidate>
+	<h1 class="mt-5 mb-5">{{ brewery }}</h1>
+	<form class="needs-validation m-5" action="/add_beer/?brewery={{ brewery }}" method="post" novalidate>
 		<div class="form-group">
 			<input class="form-control" type="text" name="new_beer" autofocus autocomplete="off" placeholder="Beer name" required>
 			<div class="invalid-feedback">

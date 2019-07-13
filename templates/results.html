@@ -3,7 +3,7 @@
 	{% block title %}Search Results{% endblock %}
 
 	{% block main %}
-		<h1>Search Results for: {{ searched }}</h1>
+		<h1 class="mt-5 mb-5">Search Results for: {{ searched }}</h1>
 		{% if results|length == 0 %}
 		<p>No breweries found!</p>
 		{% else %}
