@@ -1,6 +1,6 @@
 body {
 	text-align: center;
-	align-items: center
+	align-items: center;
 }
 footer {
 	color: grey;
@@ -32,7 +32,9 @@ main .form-control {
 
 main #login-bg {
 	background-image: url(https://source.unsplash.com/nhX8QhXMBkM);
-	height: 100vh;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 
 /*main .splash {
