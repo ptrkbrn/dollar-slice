@@ -37,6 +37,10 @@ main #login-bg {
 	background-size: cover;
 }
 
+.table>tbody .hidden-row {
+   padding: 0 8px;
+}
+
 /*main .splash {
 	display: block;
 	height: 100%;
