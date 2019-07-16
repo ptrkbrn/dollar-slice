@@ -74,14 +74,12 @@
 	
 	// Table row selection script		
 	$(rows).on("click", function(){
-		// $( rows ).removeClass("table-active")
 		$( this ).toggleClass("table-active")
-		$( this ).next("tr").toggleClass("table-active")
 	})
 
 
 	      // Initially hide toggleable content
-	    $("td[colspan=3]").find("p").hide();
+	    $("td[colspan=3]").find("a").hide();
 
 	      // Click handler on entire table
 	    $("table").click(function(event) {
@@ -93,11 +91,22 @@
 
 	          // Open and close the appropriate thing
 	        if ( $target.closest("td").attr("colspan") > 1 ) {
-	            $target.slideUp();
+	            $target.find("a").slideToggle();
 	        } else {
-	            $target.closest("tr").next().find("p").slideToggle();
+	            $target.closest("tr").next().find("a").slideToggle();
 	        }                    
 	    });
+
+	   $(".update").click(function update(){
+	   	let brewery = $(this).closest('tr').prev().children('.brewery').text()
+	   	let newDistributor = prompt("Enter a new distributor for " + brewery + ":")
+	   	
+	   	$.post( '/update/', { selected_brewery: brewery, new_distributor: newDistributor }, function(){
+	   		window.location.reload();
+	   		});
+	   	console.log(brewery)
+	   	console.log(newDistributor)
+	   })
 	</script>
 </body>
 </html>
