@@ -231,7 +231,7 @@ finally:
 
             # adds new beer to database
             cursor.execute("INSERT INTO beers (name, brewery_id) \
-                            VALUES ('%s', %s)" % (new_beer, brewery_id[0]))
+                            VALUES ($$%s$$, %s)" % (new_beer, brewery_id[0]))
             connection.commit()
             return redirect('/breweries/%s' % brewery)
         return render_template("add_beer.html", brewery=brewery)
