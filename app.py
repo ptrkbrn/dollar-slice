@@ -128,7 +128,7 @@ finally:
     @login_required
     def viewall():
         """Displays list of all breweries and distributors"""
-        cursor.execute("SELECT * FROM breweries")
+        cursor.execute("SELECT * FROM breweries ORDER BY name ASC")
         breweries = cursor.fetchall()
         return render_template('viewall.html', breweries=breweries)
 
@@ -183,7 +183,7 @@ finally:
                 return "Brewery not found!"
             brewery_id = selected_brewery[0]
             print("Brewery id: ", brewery_id)
-            cursor.execute("SELECT name FROM beers WHERE brewery_id = %i" % brewery_id)
+            cursor.execute("SELECT name FROM beers WHERE brewery_id = %i ORDER BY name ASC" % brewery_id)
             beers = cursor.fetchall()
             url_for('show_brewery_page', brewery=selected_brewery[1])
             return render_template('brewery.html',
@@ -195,7 +195,7 @@ finally:
     @login_required
     def show_distributor_page(distributor):
         """Shows page for specified distributor"""
-        cursor.execute("SELECT * FROM breweries WHERE distributor = $$%s$$" % distributor)
+        cursor.execute("SELECT * FROM breweries WHERE distributor = $$%s$$ ORDER BY name ASC" % distributor)
         breweries = cursor.fetchall()
         url_for('show_distributor_page', distributor=breweries[0][2])
         return render_template('distributor.html', breweries=breweries,
