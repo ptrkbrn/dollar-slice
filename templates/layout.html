@@ -47,7 +47,10 @@
 	<em>Created by Patrick Breen, 2019</em>
 	</footer>
 	{% endif %}
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script
+	  src="https://code.jquery.com/jquery-3.4.1.min.js"
+	  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+	  crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	<script>
@@ -70,7 +73,7 @@
 	  }, false);
 	})();
 
-	rows = document.querySelectorAll(".table tbody tr")
+	let rows = document.querySelectorAll(".table tbody tr")
 	
 	// Table row selection script		
 	$(rows).on("click", function(){
@@ -97,16 +100,34 @@
 	        }                    
 	    });
 
-	   $(".update").click(function update(){
-	   	let brewery = $(this).closest('tr').prev().children('.brewery').text()
-	   	let newDistributor = prompt("Enter a new distributor for " + brewery + ":")
-	   	
-	   	$.post( '/update/', { selected_brewery: brewery, new_distributor: newDistributor }, function(){
+   $(".update").click(function update(){
+	   	var selected_brewery = $(this).closest('tr').prev().children('.brewery').text()
+	   	var new_distributor = prompt("Enter a new distributor for " + selected_brewery + ":")
+   	
+	   	$.post( '/update/?brewery=' + selected_brewery, { new_distributor: new_distributor, selected_brewery: selected_brewery }, function(){
 	   		window.location.reload();
 	   		});
-	   	console.log(brewery)
-	   	console.log(newDistributor)
-	   })
+
+	   	console.log(selected_brewery)
+	   	console.log(new_distributor)
+   });
+
+   $(".add").click(function add(){
+   		let selected_brewery = $(this).closest('tr').prev().children('.brewery').text()
+   		let new_beer = prompt("Add a new beer to " + selected_brewery + ":")
+
+   		$.post('/add_beer/?brewery=' + selected_brewery, { brewery: selected_brewery, new_beer: new_beer}, function(){
+   			alert("Added " + new_beer + " to " + selected_brewery + "!");
+   		});
+   });
+
+   $(".delete").click(function deleteBrewery(){
+   		let brewery = $(this).closest('tr').prev().children('.brewery').text()
+   		$.post('/delete_brewery', { brewery: brewery}, function(){
+   			window.location.reload()
+   		})
+   })
+
 	</script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, jsonify
 import psycopg2
 from flask_session import Session
 from tempfile import mkdtemp
@@ -159,21 +159,18 @@ finally:
 
         if request.method == "POST":
 
-            new_distributor = request.form.get("distributor")
+            new_distributor = request.form.get("new_distributor")
             cursor.execute("UPDATE breweries \
                             SET distributor = %s \
                             WHERE name = %s", (new_distributor, selected_brewery))
             connection.commit()
+            print(new_distributor, selected_brewery)
             return redirect('/view_all')
 
         else:
             return render_template('update.html',
                                    brewery=selected_brewery[0],
                                    distributors=distributors)
-
-    # @app.route('/login')
-    # def register():
-    #   return "login route!"
 
     @app.route('/breweries/<brewery>', methods=["GET", "POST"])
     @login_required
@@ -236,20 +233,6 @@ finally:
             return redirect('/breweries/%s' % brewery)
         return render_template("add_beer.html", brewery=brewery)
 
-    # @app.route('/beer_added/', methods=["GET", "POST"])
-    # def beer_added():
-    #   brewery = request.args.get("brewery")
-    #   if request.method == "POST":
-    #       newBeer = request.form.get("new_beer")
-    #       cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
-    #       brewery_id = cursor.fetchone()
-
-    #       # adds new beer to database
-    #       cursor.execute("INSERT INTO beers (name, brewery_id) \
-    #                       VALUES ('%s', %s)" % (newBeer, brewery_id[0]))
-    #       connection.commit()
-    #       return redirect('/breweries/?brewery=%s' % brewery)
-
     @app.route('/delete_brewery', methods=["GET", "POST"])
     @login_required
     def delete_brewery():
@@ -297,7 +280,3 @@ finally:
             beers = cursor.fetchall()
             print(beers)
             return render_template("delete_beer.html", brewery=brewery, beers=beers)
-
-    # @app.route('/<brewery>/beers/<beername>')
-    # def show_beer_page(brewery, beername):
-    #   return render_template('beer.html', brewery = brewery, beername = beername)
