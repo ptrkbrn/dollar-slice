@@ -17,7 +17,7 @@
   }, false);
 })();
 
-let rows = document.querySelectorAll(".table tbody tr")
+let rows = document.querySelectorAll(".view_all tbody tr")
 
 // Table row selection script		
 $(rows).on("click", function(){
@@ -29,7 +29,7 @@ $(rows).on("click", function(){
     $("td[colspan=3]").find("a").hide();
 
       // Click handler on entire table
-    $("table").click(function(event) {
+    $(".view_all").click(function(event) {
 
           // No bubbling up
         event.stopPropagation();

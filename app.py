@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for, j
 import psycopg2
 from flask_session import Session
 from tempfile import mkdtemp
-from helpers import login_required
+from helpers import login_required, lookup
 # from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -110,15 +110,16 @@ finally:
             # escapes single quotes from brewery names
             if "'" in brewery:
                 brewery.replace("'", "\'")
+            new_brewery = lookup(brewery)
             distributor = request.form.get('distributor')
-            cursor.execute("SELECT name FROM breweries")
-            rows = cursor.fetchall()
-
-            for row in rows:
-                if brewery == row[0]:
+            cursor.execute("SELECT name FROM breweries Where name = $$%s$$" % new_brewery["name"])
+            row = cursor.fetchone()
+            if new_brewery is None:
+                return "Invalid brewery!"
+                if new_brewery["name"] == row[0]:
                     return "That brewery is already listed!"
-            cursor.execute("INSERT INTO breweries (name, distributor) \
-                            VALUES (%s, %s)", (brewery, distributor))
+            cursor.execute("INSERT INTO breweries (name, distributor, state, website) \
+                            VALUES (%s, %s, %s, %s)", (new_brewery["name"], distributor, new_brewery["state"], new_brewery["website"]))
             connection.commit()
             return redirect('/view_all')
         else:
