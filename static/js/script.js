@@ -74,3 +74,12 @@ $(".delete").click(function deleteBrewery(){
 			window.location.reload()
 		})
 })
+
+$(".delete-beer").click(function deleteBeer(){
+  let brewery = $(document).find('h1').text()
+  let beer = $(document).find('h2').text()
+  $.post('/delete_beer', {delete: beer}, function(){
+    window.location.replace('/breweries/' + brewery)
+    alert(beer + " deleted!")
+  })
+})

@@ -5,5 +5,24 @@
 	{% block main %}
 	<h1 class="mt-5 mb-5">{{ brewery }}</h1>
 	<h2 class="mt-5 mb-5">{{ beername[1] }}</h2>
+	<div class="container mb-5 mr-auto">
+		<div class="row d-flex">
+			<div class="col-sm-9 col-lg-3 ml-auto mr-auto mr-lg-0">
+				<div class="container p-3 border">
+					<img class="img-fluid" src="/static/default_beer.jpg">
+				</div>
+			</div>
+			<div class="col-sm-9 col-lg-3 text-left mr-auto ml-auto ml-lg-0 mt-2 mt-lg-0">
+				<div class="container p-3 border mb-2">
+					<ul class="list-unstyled">
+						<li>Style: </li>
+						<li>ABV: </li>
+						<li>Price: </li>
+					</ul>								
+				</div>
+				<a href="#" class="btn btn-primary btn-block delete-beer">Delete</a>	
+			</div>
+		</div>
+	</div>
 	<a href="/breweries/{{ brewery }}">Back</a>
 	{% endblock %}
