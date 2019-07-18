@@ -6,7 +6,7 @@
 	<h1 class="mt-5 mb-5">{{ brewery }}</h1>
 	<form action="/update/?brewery={{ brewery }}" method="post">
 		<div class="form-group">
-			<select class="form-control" name="distributor">
+			<select class="form-control" name="new_distributor">
 				{% for distributor in distributors %}
 				<option value="{{ distributor[0] }}">{{ distributor[0] }}</option>
 				{% endfor %}

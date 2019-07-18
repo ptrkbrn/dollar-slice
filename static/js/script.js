@@ -39,8 +39,11 @@ $(rows).on("click", function(){
           // Open and close the appropriate thing
         if ( $target.closest("td").attr("colspan") > 1 ) {
             $target.find("a").slideToggle();
+            $target.closest("tr").next().find("td").toggleClass("pb-1");
+
         } else {
             $target.closest("tr").next().find("a").slideToggle();
+            $target.closest("tr").next().find("td").toggleClass("pb-1");
         }                    
     });
 
