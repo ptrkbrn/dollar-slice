@@ -106,7 +106,7 @@ finally:
         """Allows user to add breweries to the database"""
         return render_template('add.html')
 
-    @app.route('/breweries', methods=['GET', 'POST'])
+    @app.route('/breweries', methods=['GET', 'POST', 'DELETE'])
     @login_required
     def breweries():
         """Brewery index route"""
@@ -134,7 +134,6 @@ finally:
                             VALUES (%s, %s, %s, %s)", (new_brewery["name"], distributor, new_brewery["state"], new_brewery["website"]))
             connection.commit()
             return redirect('/breweries')
-
         # Brewery get route
         else:
             cursor.execute("SELECT * FROM breweries ORDER BY name ASC")
@@ -168,7 +167,7 @@ finally:
                                 brewery=selected_brewery[0],
                                 distributors=distributors)
 
-    @app.route('/breweries/<brewery>', methods=["GET", "POST"])
+    @app.route('/breweries/<brewery>', methods=["GET", "POST", "DELETE"])
     @login_required
     def brewery_page(brewery):
         """Brewery update routes"""
@@ -183,6 +182,23 @@ finally:
             connection.commit()
             return redirect('/breweries')
         
+        # Brewery delete route
+        if request.method == "DELETE":
+            brewery = request.form.get("brewery")
+            cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
+            brewery_id = cursor.fetchone()
+            if brewery_id is None:
+                return "Brewery not found."
+
+            # deletes beers associated with brewery from beers
+
+            cursor.execute("DELETE FROM beers WHERE brewery_id = %i" % brewery_id)
+
+            # deletes brewery from breweries
+            cursor.execute("DELETE FROM breweries WHERE id = %i" % brewery_id)
+            connection.commit()
+            return redirect("/breweries")
+
         # Shows page for given brewery
         else:
             cursor.execute("SELECT * FROM breweries WHERE name = $$%s$$" % brewery)
@@ -277,7 +293,7 @@ finally:
             # deletes brewery from breweries
             cursor.execute("DELETE FROM breweries WHERE id = %i" % brewery_id)
             connection.commit()
-            return redirect("/view_all")
+            return redirect("/breweries")
 
         # Brewery get route
         else:

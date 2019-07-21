@@ -69,10 +69,16 @@ $(".add").click(function add(){
 });
 
 $(".delete").click(function deleteBrewery(){
-		let brewery = $(this).closest('tr').prev().children('.brewery').text()
-		$.post('/delete_brewery', { brewery: brewery}, function(){
-			window.location.reload()
-		})
+	let brewery = $(this).closest('tr').prev().children('.brewery').text()
+  $.ajax({
+    url: '/breweries/' + brewery,
+    type: "DELETE",
+    data: { brewery: brewery},
+    success: function(){
+      alert(brewery + " deleted!")
+      window.location.reload()
+    }
+  })
 })
 
 $(".delete-beer").click(function deleteBeer(){
@@ -83,3 +89,4 @@ $(".delete-beer").click(function deleteBeer(){
     alert(beer + " deleted!")
   })
 })
+
