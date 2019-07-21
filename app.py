@@ -110,6 +110,8 @@ finally:
     @login_required
     def breweries():
         """Brewery index route"""
+
+        # Brewery post route
         if request.method == 'POST':
             brewery = request.form.get('brewery')
 
@@ -120,14 +122,20 @@ finally:
             distributor = request.form.get('distributor')
             cursor.execute("SELECT name FROM breweries Where name = $$%s$$" % new_brewery["name"])
             row = cursor.fetchone()
+
+            # Ensures user entered a brewery
             if new_brewery is None:
                 return "Invalid brewery!"
-                if new_brewery["name"] == row[0]:
-                    return "That brewery is already listed!"
+            
+            # Handles duplicate brewery name
+            if new_brewery["name"] == row[0]:
+                return "That brewery is already listed!"
             cursor.execute("INSERT INTO breweries (name, distributor, state, website) \
                             VALUES (%s, %s, %s, %s)", (new_brewery["name"], distributor, new_brewery["state"], new_brewery["website"]))
             connection.commit()
             return redirect('/breweries')
+
+        # Brewery get route
         else:
             cursor.execute("SELECT * FROM breweries ORDER BY name ASC")
             breweries = cursor.fetchall()
@@ -151,7 +159,7 @@ finally:
     @app.route('/breweries/<brewery>/update', methods=["GET"])
     @login_required
     def update(brewery):
-        """Updates distributor info for specified brewery"""
+        """Shows form to update distributor for given brewery"""
         cursor.execute("SELECT name FROM breweries WHERE name = $$%s$$" % brewery)
         selected_brewery = cursor.fetchone()
         cursor.execute("SELECT distributor FROM breweries GROUP BY distributor")
@@ -163,9 +171,10 @@ finally:
     @app.route('/breweries/<brewery>', methods=["GET", "POST"])
     @login_required
     def brewery_page(brewery):
-        """Shows page for specified brewery"""
-        if request.method == "POST":
+        """Brewery update routes"""
 
+        # Updates distributor for given brewery
+        if request.method == "POST":
             new_distributor = request.form.get("new_distributor")
             print(new_distributor, brewery)
             cursor.execute("UPDATE breweries \
@@ -173,6 +182,8 @@ finally:
                             WHERE name = %s", (new_distributor, brewery))
             connection.commit()
             return redirect('/breweries')
+        
+        # Shows page for given brewery
         else:
             cursor.execute("SELECT * FROM breweries WHERE name = $$%s$$" % brewery)
             selected_brewery = cursor.fetchone()
@@ -190,11 +201,11 @@ finally:
 
     @app.route('/distributors/<distributor>')
     @login_required
-    def show_distributor_page(distributor):
+    def distributor_page(distributor):
         """Shows page for specified distributor"""
         cursor.execute("SELECT * FROM breweries WHERE distributor = $$%s$$ ORDER BY name ASC" % distributor)
         breweries = cursor.fetchall()
-        url_for('show_distributor_page', distributor=breweries[0][2])
+        url_for('distributor_page', distributor=breweries[0][2])
         return render_template('distributor.html', breweries=breweries,
                                                    distributor=breweries[0][2])
 
@@ -216,12 +227,16 @@ finally:
     @app.route('/breweries/<brewery>/beers/new')
     @login_required
     def add_beer(brewery):
+
+        # Shows new beer form
         return render_template("add_beer.html", brewery=brewery)
 
     @app.route('/breweries/<brewery>/beers', methods=["GET", "POST"])
     @login_required
     def beers(brewery):
         """Adds beer to the database"""
+
+        # Beer get route
         if request.method == "POST":
             new_beer = request.form.get("new_beer")
             cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
@@ -246,6 +261,8 @@ finally:
     @login_required
     def delete_brewery():
         """Removes brewery from the database"""
+
+        # Brewery post route
         if request.method == "POST":
             brewery = request.form.get("brewery")
             cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
@@ -262,7 +279,7 @@ finally:
             connection.commit()
             return redirect("/view_all")
 
-
+        # Brewery get route
         else:
             return render_template("delete_brewery.html")
 
