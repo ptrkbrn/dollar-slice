@@ -51,7 +51,7 @@ $(".update").click(function update(){
    	var selected_brewery = $(this).closest('tr').prev().children('.brewery').text()
    	var new_distributor = prompt("Enter a new distributor for " + selected_brewery + ":")
 	
-   	$.post( '/update/?brewery=' + selected_brewery, { new_distributor: new_distributor, selected_brewery: selected_brewery }, function(){
+   	$.post( '/breweries/' + selected_brewery, { new_distributor: new_distributor, selected_brewery: selected_brewery }, function(){
    		window.location.reload();
    		});
 
@@ -63,7 +63,7 @@ $(".add").click(function add(){
 		let selected_brewery = $(this).closest('tr').prev().children('.brewery').text()
 		let new_beer = prompt("Add a new beer to " + selected_brewery + ":")
 
-		$.post('/add_beer/?brewery=' + selected_brewery, { brewery: selected_brewery, new_beer: new_beer}, function(){
+		$.post('/breweries/' + selected_brewery + "/beers", { brewery: selected_brewery, new_beer: new_beer}, function(){
 			alert("Added " + new_beer + " to " + selected_brewery + "!");
 		});
 });

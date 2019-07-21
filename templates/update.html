@@ -4,7 +4,7 @@
 
 	{% block main %}
 	<h1 class="mt-5 mb-5">{{ brewery }}</h1>
-	<form action="/update/?brewery={{ brewery }}" method="post" class="mb-5">
+	<form action="/breweries/{{ brewery }}" method="post" class="mb-5">
 		<div class="form-group">
 			<select class="form-control" name="new_distributor">
 				{% for distributor in distributors %}

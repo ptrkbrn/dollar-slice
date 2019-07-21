@@ -100,10 +100,16 @@ finally:
     # def index():
     #   return render_template('index.html')
 
-    @app.route('/add_brewery', methods=['GET', 'POST'])
+    @app.route('/breweries/new', methods=['GET', 'POST'])
     @login_required
     def add_brewery():
         """Allows user to add breweries to the database"""
+        return render_template('add.html')
+
+    @app.route('/breweries', methods=['GET', 'POST'])
+    @login_required
+    def breweries():
+        """Brewery index route"""
         if request.method == 'POST':
             brewery = request.form.get('brewery')
 
@@ -121,17 +127,11 @@ finally:
             cursor.execute("INSERT INTO breweries (name, distributor, state, website) \
                             VALUES (%s, %s, %s, %s)", (new_brewery["name"], distributor, new_brewery["state"], new_brewery["website"]))
             connection.commit()
-            return redirect('/view_all')
+            return redirect('/breweries')
         else:
-            return render_template('add.html')
-
-    @app.route('/view_all')
-    @login_required
-    def viewall():
-        """Displays list of all breweries and distributors"""
-        cursor.execute("SELECT * FROM breweries ORDER BY name ASC")
-        breweries = cursor.fetchall()
-        return render_template('viewall.html', breweries=breweries)
+            cursor.execute("SELECT * FROM breweries ORDER BY name ASC")
+            breweries = cursor.fetchall()
+            return render_template('viewall.html', breweries=breweries)
 
     @app.route('/search/')
     @login_required
@@ -148,36 +148,32 @@ finally:
         results = cursor.fetchall()
         return render_template("results.html", searched=searched, results=results)
 
-    @app.route('/update/', methods=["GET", "POST"])
+    @app.route('/breweries/<brewery>/update', methods=["GET"])
     @login_required
-    def update():
+    def update(brewery):
         """Updates distributor info for specified brewery"""
-        brewery = request.args.get("brewery")
         cursor.execute("SELECT name FROM breweries WHERE name = $$%s$$" % brewery)
         selected_brewery = cursor.fetchone()
         cursor.execute("SELECT distributor FROM breweries GROUP BY distributor")
         distributors = cursor.fetchall()
-
-        if request.method == "POST":
-
-            new_distributor = request.form.get("new_distributor")
-            cursor.execute("UPDATE breweries \
-                            SET distributor = %s \
-                            WHERE name = %s", (new_distributor, selected_brewery))
-            connection.commit()
-            print(new_distributor, selected_brewery)
-            return redirect('/view_all')
-
-        else:
-            return render_template('update.html',
-                                   brewery=selected_brewery[0],
-                                   distributors=distributors)
+        return render_template('update.html',
+                                brewery=selected_brewery[0],
+                                distributors=distributors)
 
     @app.route('/breweries/<brewery>', methods=["GET", "POST"])
     @login_required
-    def show_brewery_page(brewery):
+    def brewery_page(brewery):
         """Shows page for specified brewery"""
-        if request.method == "GET":
+        if request.method == "POST":
+
+            new_distributor = request.form.get("new_distributor")
+            print(new_distributor, brewery)
+            cursor.execute("UPDATE breweries \
+                            SET distributor = %s \
+                            WHERE name = %s", (new_distributor, brewery))
+            connection.commit()
+            return redirect('/breweries')
+        else:
             cursor.execute("SELECT * FROM breweries WHERE name = $$%s$$" % brewery)
             selected_brewery = cursor.fetchone()
             if selected_brewery is None:
@@ -186,7 +182,7 @@ finally:
             print("Brewery id: ", brewery_id)
             cursor.execute("SELECT name FROM beers WHERE brewery_id = %i ORDER BY name ASC" % brewery_id)
             beers = cursor.fetchall()
-            url_for('show_brewery_page', brewery=selected_brewery[1])
+            url_for('brewery_page', brewery=selected_brewery[1])
             return render_template('brewery.html',
                                    brewery=selected_brewery[1],
                                    beers=beers,
@@ -204,7 +200,7 @@ finally:
 
     @app.route('/breweries/<brewery>/beers/<beer>')
     @login_required
-    def show_beer_page(brewery, beer):
+    def beer_page(brewery, beer):
         """Shows beer page"""
         # fetches db row for selected beer
         cursor.execute("SELECT * FROM beers WHERE name = $$%s$$" % beer)
@@ -213,26 +209,38 @@ finally:
         # fetches appropriate brewery name
         cursor.execute("SELECT name FROM breweries WHERE id = %i" % beername[2])
         brewery = cursor.fetchone()
-        url_for('show_beer_page', brewery=brewery[0], beer=beername)
+        url_for('beer_page', brewery=brewery[0], beer=beername)
         return render_template('beer.html', beername=beername, brewery=brewery[0])
 
     # add a beer route
-    @app.route('/add_beer/', methods=["GET", "POST"])
+    @app.route('/breweries/<brewery>/beers/new')
     @login_required
-    def add_beer():
+    def add_beer(brewery):
+        return render_template("add_beer.html", brewery=brewery)
+
+    @app.route('/breweries/<brewery>/beers', methods=["GET", "POST"])
+    @login_required
+    def beers(brewery):
         """Adds beer to the database"""
-        brewery = request.args.get("brewery")
         if request.method == "POST":
             new_beer = request.form.get("new_beer")
             cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
             brewery_id = cursor.fetchone()
 
-            # adds new beer to database
+            # Fetches beers currently listed for brewery
+            cursor.execute("SELECT name FROM beers WHERE brewery_id = %i" % brewery_id)
+            current_beers = cursor.fetchall()
+
+            # Ensures new beer isn't a duplicate
+            for beer in current_beers:
+                if new_beer == beer[0]:
+                    return("Beer already listed!")
+           
+            # Adds new beer to database
             cursor.execute("INSERT INTO beers (name, brewery_id) \
                             VALUES ($$%s$$, %s)" % (new_beer, brewery_id[0]))
             connection.commit()
             return redirect('/breweries/%s' % brewery)
-        return render_template("add_beer.html", brewery=brewery)
 
     @app.route('/delete_brewery', methods=["GET", "POST"])
     @login_required
