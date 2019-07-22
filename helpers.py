@@ -26,10 +26,13 @@ def lookup(searched_brewery):
 	# Parse response
 	try:
 		brewery = response.json()
-		return {
-			"name": brewery[0]["name"],
-			"state": brewery[0]["state"],
-			"website": brewery[0]["website_url"]
-		}
+		if len(brewery) == 0:
+			return None
+		else:
+			return {
+				"name": brewery[0]["name"],
+				"state": brewery[0]["state"],
+				"website": brewery[0]["website_url"]
+			}
 	except (KeyError, TypeError, ValueError):
 		return None

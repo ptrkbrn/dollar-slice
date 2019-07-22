@@ -106,7 +106,7 @@ finally:
         """Allows user to add breweries to the database"""
         return render_template('add.html')
 
-    @app.route('/breweries', methods=['GET', 'POST', 'DELETE'])
+    @app.route('/breweries', methods=['GET', 'POST', 'DELETE', 'PUT'])
     @login_required
     def breweries():
         """Brewery index route"""
@@ -119,6 +119,10 @@ finally:
             if "'" in brewery:
                 brewery.replace("'", "\'")
             new_brewery = lookup(brewery)
+            if new_brewery is None:
+                new_brewery = {'name': brewery,
+                               'state': 'N/A',
+                               'website': 'N/A'}
             distributor = request.form.get('distributor')
             cursor.execute("SELECT name FROM breweries Where name = $$%s$$" % new_brewery["name"])
             row = cursor.fetchone()
@@ -128,7 +132,7 @@ finally:
                 return "Invalid brewery!"
             
             # Handles duplicate brewery name
-            if new_brewery["name"] == row[0]:
+            if row is not None:
                 return "That brewery is already listed!"
             cursor.execute("INSERT INTO breweries (name, distributor, state, website) \
                             VALUES (%s, %s, %s, %s)", (new_brewery["name"], distributor, new_brewery["state"], new_brewery["website"]))
@@ -167,13 +171,13 @@ finally:
                                 brewery=selected_brewery[0],
                                 distributors=distributors)
 
-    @app.route('/breweries/<brewery>', methods=["GET", "POST", "DELETE"])
+    @app.route('/breweries/<brewery>', methods=["GET", "POST", "DELETE", "PUT"])
     @login_required
     def brewery_page(brewery):
         """Brewery update routes"""
 
         # Updates distributor for given brewery
-        if request.method == "POST":
+        if request.method == "PUT":
             new_distributor = request.form.get("new_distributor")
             print(new_distributor, brewery)
             cursor.execute("UPDATE breweries \

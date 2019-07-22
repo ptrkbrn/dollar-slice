@@ -48,16 +48,19 @@ $(rows).on("click", function(){
     });
 
 $(".update").click(function update(){
-   	var selected_brewery = $(this).closest('tr').prev().children('.brewery').text()
-   	var new_distributor = prompt("Enter a new distributor for " + selected_brewery + ":")
-	
-   	$.post( '/breweries/' + selected_brewery, { new_distributor: new_distributor, selected_brewery: selected_brewery }, function(){
-   		window.location.reload();
-   		});
-
-   	console.log(selected_brewery)
-   	console.log(new_distributor)
+   	let selected_brewery = $(this).closest('tr').prev().children('.brewery').text()
+   	let new_distributor = prompt("Enter a new distributor for " + selected_brewery + ":")
+    $.ajax({
+      url: '/breweries/' + selected_brewery,
+      type: "PUT",
+      data: { new_distributor: new_distributor, selected_brewery: selected_brewery },
+      success: function(){
+        alert(brewery + "distributor updated to " + new_distributor + "!")
+        window.location.reload();
+        }
+    })
 });
+
 
 $(".add").click(function add(){
 		let selected_brewery = $(this).closest('tr').prev().children('.brewery').text()
@@ -79,7 +82,7 @@ $(".delete").click(function deleteBrewery(){
       window.location.reload()
     }
   })
-})
+});
 
 $(".delete-beer").click(function deleteBeer(){
   let brewery = $(document).find('h1').text()
