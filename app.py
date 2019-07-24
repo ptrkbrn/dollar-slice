@@ -280,28 +280,9 @@ finally:
     @app.route('/breweries/delete', methods=["GET", "POST"])
     @login_required
     def delete_brewery():
-        """Removes brewery from the database"""
-
-        # Brewery post route
-        if request.method == "POST":
-            brewery = request.form.get("brewery")
-            cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
-            brewery_id = cursor.fetchone()
-            if brewery_id is None:
-                return "Brewery not found."
-
-            # deletes beers associated with brewery from beers
-
-            cursor.execute("DELETE FROM beers WHERE brewery_id = %i" % brewery_id)
-
-            # deletes brewery from breweries
-            cursor.execute("DELETE FROM breweries WHERE id = %i" % brewery_id)
-            connection.commit()
-            return redirect("/breweries")
-
-        # Brewery get route
-        else:
-            return render_template("delete_brewery.html")
+        cursor.execute("SELECT name FROM breweries ORDER BY name ASC")
+        breweries = cursor.fetchall()
+        return render_template("delete_brewery.html", breweries=breweries)
 
     @app.route("/delete_beer/", methods=["GET", "POST"])
     @login_required

@@ -75,21 +75,28 @@ $(".add").click(function add(){
 // AJAX request for deleting brewery from list drop down
 $(".delete").click(function deleteBrewery(){
 	let brewery = $(this).closest('tr').prev().children('.brewery').text()
-  $.ajax({
-    url: '/breweries/' + brewery,
-    type: "DELETE",
-    data: { brewery: brewery },
-    success: function(){
-      alert(brewery + " deleted!")
-      window.location.reload()
-    }
-  })
+  let cfm = confirm("Are you sure you want to delete " + brewery + "?")
+  if (cfm == true) {
+    $.ajax({
+      url: '/breweries/' + brewery,
+      type: "DELETE",
+      data: { brewery: brewery },
+      success: function(){
+        alert(brewery + " deleted!")
+        window.location.reload()
+      }
+    })
+  }
 });
 
+// Scripts for deleting via the delete page
+
+// Prevents form submission
 $("#delete-form").submit(function(e){
     return false;
 });
 
+// AJAX delete request
 $( document ).ready(function(){
   $("#delete").click(function deleteBrewery(){
     let brewery = $('#brewery').val()
@@ -100,7 +107,7 @@ $( document ).ready(function(){
       data: { brewery: brewery },
       success: function(){
         alert(brewery + " deleted!")
-        $.get( '/breweries' )
+        window.location.replace('/breweries')
       }
     });
   });
