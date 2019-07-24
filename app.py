@@ -277,7 +277,7 @@ finally:
             connection.commit()
             return redirect('/breweries/%s' % brewery)
 
-    @app.route('/delete_brewery', methods=["GET", "POST"])
+    @app.route('/breweries/delete', methods=["GET", "POST"])
     @login_required
     def delete_brewery():
         """Removes brewery from the database"""
