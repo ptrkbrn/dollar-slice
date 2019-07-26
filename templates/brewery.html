@@ -40,8 +40,8 @@
 				<div class="row">
 					<div class="container p-3 border mb-2 mt-2">
 						<ul class="list-unstyled m-0">
-							<li>Location: {{ location }}</li>
-							<li>Website: <a href="{{ website }}">{{ website }}</a></li>
+							<li>Location: {% if location %} {{ location }} {% else %} N/A {% endif %}</li>
+							<li>Website: {% if website %}<a href="{{ website }}">{{ website }}</a>{% else %} N/A {% endif %}</li>
 							{% if added_by %}
 							<li><em>Added by {{ added_by[0] }} {% if date %} on {{ date[0] }} {% endif %}</em></li>
 							{% endif %}
