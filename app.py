@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for, jsonify
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 import psycopg2
 from flask_session import Session
 from tempfile import mkdtemp
@@ -79,6 +79,7 @@ finally:
             session["user_id"] = check_username[0][0]
 
             # redirects to index
+            flash("Hi, " + username + "!")
             return redirect('/')
 
         # Get route
@@ -121,8 +122,8 @@ finally:
             new_brewery = lookup(brewery)
             if new_brewery is None:
                 new_brewery = {'name': brewery,
-                               'state': 'N/A',
-                               'website': 'N/A'}
+                               'state': None,
+                               'website': None}
             distributor = request.form.get('distributor')
             cursor.execute("SELECT name FROM breweries Where name = $$%s$$" % new_brewery["name"])
             row = cursor.fetchone()
@@ -130,13 +131,19 @@ finally:
             # Ensures user entered a brewery
             if new_brewery is None:
                 return "Invalid brewery!"
-            
+
             # Handles duplicate brewery name
             if row is not None:
                 return "That brewery is already listed!"
             cursor.execute("INSERT INTO breweries (name, distributor, state, website, added_by) \
-                            VALUES (%s, %s, %s, %s, %s)", (new_brewery["name"], distributor, new_brewery["state"], new_brewery["website"], session["user_id"]))
+                            VALUES (%s, %s, %s, %s, %s)",
+                            (new_brewery["name"], 
+                             distributor, 
+                             new_brewery["state"], 
+                             new_brewery["website"], 
+                             session["user_id"]))
             connection.commit()
+            flash(new_brewery["name"] + " added!")
             return redirect('/breweries')
         # Brewery get route
         else:
@@ -168,8 +175,8 @@ finally:
         cursor.execute("SELECT distributor FROM breweries GROUP BY distributor")
         distributors = cursor.fetchall()
         return render_template('update.html',
-                                brewery=selected_brewery[0],
-                                distributors=distributors)
+                               brewery=selected_brewery[0],
+                               distributors=distributors)
 
     @app.route('/breweries/<brewery>', methods=["GET", "POST", "DELETE", "PUT"])
     @login_required
@@ -184,8 +191,9 @@ finally:
                             SET distributor = %s \
                             WHERE name = %s", (new_distributor, brewery))
             connection.commit()
+            flash(brewery + " distributor updated to " + new_distributor + "!")
             return redirect('/breweries')
-        
+
         # Brewery delete route
         if request.method == "DELETE":
             brewery = request.form.get("brewery")
@@ -201,6 +209,7 @@ finally:
             # deletes brewery from breweries
             cursor.execute("DELETE FROM breweries WHERE id = %i" % brewery_id)
             connection.commit()
+            flash(brewery + " deleted!")
             return redirect("/breweries")
 
         # Shows page for given brewery
@@ -215,19 +224,26 @@ finally:
 
             # Selects and formats the date the brewery was added
             if selected_brewery[7] is not None:
-                cursor.execute("SELECT to_char(date_added, 'mm-dd-yy') FROM breweries WHERE id = %i" % brewery_id)
+                cursor.execute("SELECT to_char(date_added, 'mm-dd-yy') \
+                               FROM breweries \
+                               WHERE id = %i" % brewery_id)
                 date = cursor.fetchone()
             else:
                 date = None
             # Accesses info for user who added the brewery
             if selected_brewery[3] is not None:
-                cursor.execute("SELECT username FROM users WHERE id = %i" % selected_brewery[3])
+                cursor.execute("SELECT username \
+                               FROM users \
+                               WHERE id = %i" % selected_brewery[3])
                 added_by = cursor.fetchone()
             else:
                 added_by = None
 
             # Uses brewery id to fetch associated beers
-            cursor.execute("SELECT name FROM beers WHERE brewery_id = %i ORDER BY name ASC" % brewery_id)
+            cursor.execute("SELECT name \
+                           FROM beers \
+                           WHERE brewery_id = %i \
+                           ORDER BY name ASC" % brewery_id)
             beers = cursor.fetchall()
             url_for('brewery_page', brewery=selected_brewery[1])
             return render_template('brewery.html',
@@ -244,11 +260,13 @@ finally:
     @login_required
     def distributor_page(distributor):
         """Shows page for specified distributor"""
-        cursor.execute("SELECT * FROM breweries WHERE distributor = $$%s$$ ORDER BY name ASC" % distributor)
+        cursor.execute("SELECT * FROM breweries \
+                       WHERE distributor = $$%s$$ \
+                       ORDER BY name ASC" % distributor)
         breweries = cursor.fetchall()
         url_for('distributor_page', distributor=breweries[0][2])
         return render_template('distributor.html', breweries=breweries,
-                                                   distributor=breweries[0][2])
+                               distributor=breweries[0][2])
 
     @app.route('/breweries/<brewery>/beers/<beer>')
     @login_required
@@ -290,12 +308,13 @@ finally:
             # Ensures new beer isn't a duplicate
             for beer in current_beers:
                 if new_beer == beer[0]:
-                    return("Beer already listed!")
+                    return "Beer already listed!"
            
             # Adds new beer to database
             cursor.execute("INSERT INTO beers (name, brewery_id) \
                             VALUES ($$%s$$, %s)" % (new_beer, brewery_id[0]))
             connection.commit()
+            flash(new_beer + " added to " + brewery + "!")
             return redirect('/breweries/%s' % brewery)
 
     @app.route('/breweries/delete', methods=["GET", "POST"])
@@ -324,7 +343,10 @@ finally:
             cursor.execute("SELECT id from breweries WHERE name = $$%s$$" % brewery)
             brewery_id = cursor.fetchone()
             print(brewery_id[0])
-            cursor.execute("SELECT beers.name FROM beers, breweries WHERE brewery_id = %i GROUP BY beers.name" % brewery_id[0])
+            cursor.execute("SELECT beers.name \
+                           FROM beers, breweries \
+                           WHERE brewery_id = %i \
+                           GROUP BY beers.name" % brewery_id[0])
             beers = cursor.fetchall()
             print(beers)
             return render_template("delete_beer.html", brewery=brewery, beers=beers)

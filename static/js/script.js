@@ -17,12 +17,12 @@
   }, false);
 })();
 
-let rows = document.querySelectorAll(".view_all tbody tr")
+let rows = document.querySelectorAll(".view_all tbody tr");
 
-// Table row selection script		
+// Table row selection script   
 $(rows).on("click", function(){
-	$( this ).toggleClass("table-active")
-})
+  $( this ).toggleClass("table-active");
+});
 
 
       // Initially hide toggleable content
@@ -48,44 +48,44 @@ $(rows).on("click", function(){
     });
 
 $(".update").click(function update(){
-   	let selected_brewery = $(this).closest('tr').prev().children('.brewery').text()
-   	let new_distributor = prompt("Enter a new distributor for " + selected_brewery + ":")
+    let selected_brewery = $(this).closest('tr').prev().children('.brewery').text();
+    let new_distributor = prompt("Enter a new distributor for " + selected_brewery + ":");
     $.ajax({
       url: '/breweries/' + selected_brewery,
       type: "PUT",
       data: { new_distributor: new_distributor, selected_brewery: selected_brewery },
       success: function(){
-        alert(selected_brewery + " distributor updated to " + new_distributor + "!")
+        alert(selected_brewery + " distributor updated to " + new_distributor + "!");
         window.location.reload();
         }
-    })
+    });
 });
 
 
 $(".add").click(function add(){
-		let selected_brewery = $(this).closest('tr').prev().children('.brewery').text()
-		let new_beer = prompt("Add a new beer to " + selected_brewery + ":")
+    let selected_brewery = $(this).closest('tr').prev().children('.brewery').text();
+    let new_beer = prompt("Add a new beer to " + selected_brewery + ":");
 
-		$.post('/breweries/' + selected_brewery + "/beers", { brewery: selected_brewery, new_beer: new_beer}, function(){
-			alert("Added " + new_beer + " to " + selected_brewery + "!");
-		});
+    $.post('/breweries/' + selected_brewery + "/beers", { brewery: selected_brewery, new_beer: new_beer}, function(){
+      alert("Added " + new_beer + " to " + selected_brewery + "!");
+    });
 });
 
 
 // AJAX request for deleting brewery from list drop down
 $(".delete").click(function deleteBrewery(){
-	let brewery = $(this).closest('tr').prev().children('.brewery').text()
-  let cfm = confirm("Are you sure you want to delete " + brewery + "?")
+  let brewery = $(this).closest('tr').prev().children('.brewery').text();
+  let cfm = confirm("Are you sure you want to delete " + brewery + "?");
   if (cfm == true) {
     $.ajax({
       url: '/breweries/' + brewery,
       type: "DELETE",
       data: { brewery: brewery },
       success: function(){
-        alert(brewery + " deleted!")
-        window.location.reload()
+        alert(brewery + " deleted!");
+        window.location.reload();
       }
-    })
+    });
   }
 });
 
@@ -99,15 +99,15 @@ $("#delete-form").submit(function(e){
 // AJAX delete request
 $( document ).ready(function(){
   $("#delete").click(function deleteBrewery(){
-    let brewery = $('#brewery').val()
-    console.log(brewery)
+    let brewery = $('#brewery').val();
+    console.log(brewery);
     $.ajax({
       url: '/breweries/' + brewery,
       type: "DELETE",
       data: { brewery: brewery },
       success: function(){
-        alert(brewery + " deleted!")
-        window.location.replace('/breweries')
+        alert(brewery + " deleted!");
+        window.location.replace('/breweries');
       }
     });
   });
@@ -115,11 +115,10 @@ $( document ).ready(function(){
 
 // AJAX request for deleting beer
 $(".delete-beer").click(function deleteBeer(){
-  let brewery = $(document).find('h1').text()
-  let beer = $(document).find('h2').text()
+  let brewery = $(document).find('h1').text();
+  let beer = $(document).find('h2').text();
   $.post('/delete_beer', {delete: beer}, function(){
-    window.location.replace('/breweries/' + brewery)
-    alert(beer + " deleted!")
-  })
-})
-
+    window.location.replace('/breweries/' + brewery);
+    alert(beer + " deleted!");
+  });
+});
