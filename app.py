@@ -213,6 +213,12 @@ finally:
                 return "Brewery not found!"
             brewery_id = selected_brewery[0]
 
+            # Selects and formats the date the brewery was added
+            if selected_brewery[7] is not None:
+                cursor.execute("SELECT to_char(date_added, 'mm-dd-yy') FROM breweries WHERE id = %i" % brewery_id)
+                date = cursor.fetchone()
+            else:
+                date = None
             # Accesses info for user who added the brewery
             if selected_brewery[3] is not None:
                 cursor.execute("SELECT username FROM users WHERE id = %i" % selected_brewery[3])
@@ -230,7 +236,8 @@ finally:
                                    distributor=selected_brewery[2],
                                    website=selected_brewery[5],
                                    location=selected_brewery[6],
-                                   added_by=added_by
+                                   added_by=added_by,
+                                   date=date
                                    )
 
     @app.route('/distributors/<distributor>')

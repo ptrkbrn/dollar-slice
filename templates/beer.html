@@ -15,9 +15,9 @@
 			<div class="col-sm-9 col-lg-3 text-left mr-auto ml-auto ml-lg-0 mt-2 mt-lg-0">
 				<div class="container p-3 border mb-2">
 					<ul class="list-unstyled m-0">
-						<li>Style: </li>
-						<li>ABV: </li>
-						<li>Price: </li>
+						<li>Style: {% if beername[3] %} {{ beername[3] }} {% else %} N/A {% endif %}</li>
+						<li>ABV: {% if beername[4] %} {{ beername[4] }}% {% else %} N/A {% endif %}</li>
+						<li>Price: {% if beername[5] %} ${{ beername[5] }} {% else %} N/A {% endif %}</li>
 					</ul>								
 				</div>
 				<a href="#" class="btn btn-primary btn-block delete-beer">Delete</a>	

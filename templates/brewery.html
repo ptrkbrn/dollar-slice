@@ -43,7 +43,7 @@
 							<li>Location: {{ location }}</li>
 							<li>Website: <a href="{{ website }}">{{ website }}</a></li>
 							{% if added_by %}
-							<li><em>Added by {{ added_by[0] }}</em></li>
+							<li><em>Added by {{ added_by[0] }} {% if date %} on {{ date[0] }} {% endif %}</em></li>
 							{% endif %}
 						</ul>								
 					</div>
