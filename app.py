@@ -134,8 +134,8 @@ finally:
             # Handles duplicate brewery name
             if row is not None:
                 return "That brewery is already listed!"
-            cursor.execute("INSERT INTO breweries (name, distributor, state, website) \
-                            VALUES (%s, %s, %s, %s)", (new_brewery["name"], distributor, new_brewery["state"], new_brewery["website"]))
+            cursor.execute("INSERT INTO breweries (name, distributor, state, website, added_by) \
+                            VALUES (%s, %s, %s, %s, %s)", (new_brewery["name"], distributor, new_brewery["state"], new_brewery["website"], session["user_id"]))
             connection.commit()
             return redirect('/breweries')
         # Brewery get route
@@ -207,17 +207,31 @@ finally:
         else:
             cursor.execute("SELECT * FROM breweries WHERE name = $$%s$$" % brewery)
             selected_brewery = cursor.fetchone()
+
+            # Handles invalide brewery names
             if selected_brewery is None:
                 return "Brewery not found!"
             brewery_id = selected_brewery[0]
-            print("Brewery id: ", brewery_id)
+
+            # Accesses info for user who added the brewery
+            if selected_brewery[3] is not None:
+                cursor.execute("SELECT username FROM users WHERE id = %i" % selected_brewery[3])
+                added_by = cursor.fetchone()
+            else:
+                added_by = None
+
+            # Uses brewery id to fetch associated beers
             cursor.execute("SELECT name FROM beers WHERE brewery_id = %i ORDER BY name ASC" % brewery_id)
             beers = cursor.fetchall()
             url_for('brewery_page', brewery=selected_brewery[1])
             return render_template('brewery.html',
                                    brewery=selected_brewery[1],
                                    beers=beers,
-                                   distributor=selected_brewery[2])
+                                   distributor=selected_brewery[2],
+                                   website=selected_brewery[5],
+                                   location=selected_brewery[6],
+                                   added_by=added_by
+                                   )
 
     @app.route('/distributors/<distributor>')
     @login_required
