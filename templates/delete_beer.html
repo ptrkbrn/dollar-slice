@@ -4,16 +4,20 @@
 
 	{% block main %}
 	<h1 class="mt-5 mb-5">{{ brewery }}</h1>
-	<form action="/delete_beer" method="post" class="mb-5">
-		<div class="form-group">
-			<label for="delete">Select a beer to delete: </label>
-			<select class="form-control" id="delete" name="delete">
-				{% for beer in beers %}
-				<option value="{{ beer[0] }}">{{ beer[0] }}</option>
-				{% endfor %}
-			</select>
-		</div>
-		<button class="btn btn-primary" type="submit">Delete</button>
-	</form>
-	<a href="/breweries/{{ brewery }}">Back</a>
+	{% if beers|length < 1 %}
+		<p>No beers added yet!</p>
+	{% else %}
+		<form action="/delete_beer" method="post" class="mb-5">
+			<div class="form-group">
+				<label for="delete">Select a beer to delete: </label>
+				<select class="form-control" id="delete" name="delete">
+					{% for beer in beers %}
+					<option value="{{ beer[0] }}">{{ beer[0] }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<button class="btn btn-primary" type="submit">Delete</button>
+		</form>
+		<a href="/breweries/{{ brewery }}">Back</a>
+	{% endif %}
 	{% endblock %}

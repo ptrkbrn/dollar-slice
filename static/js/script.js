@@ -89,7 +89,7 @@ $(".delete").click(function deleteBrewery(){
   }
 });
 
-// Scripts for deleting via the delete page
+// Scripts for deleting brewery via the brewery delete page
 
 // Prevents form submission
 $("#delete-form").submit(function(e){
@@ -98,7 +98,7 @@ $("#delete-form").submit(function(e){
 
 // AJAX delete request
 $( document ).ready(function(){
-  $("#delete").click(function deleteBrewery(){
+  $("#brewery-delete-btn").click(function deleteBrewery(){
     let brewery = $('#brewery').val();
     console.log(brewery);
     $.ajax({
