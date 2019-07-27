@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block title %}Whoops!{% endblock %}
+
+{% block main %}
+<div class="container p-5">
+	<div class="jumbotron jumbotron-fluid">
+		<div class="container">
+			<h1 class="display-4">Whoops!</h1>
+			<hr>
+			<p class="lead">{{ message }}</p>
+		</div>
+	</div>
+	<a href="#" class="btn btn-outline-primary" onclick="goBack()">Back</a>
+</div>
+
+<script type="text/javascript">
+	function goBack(){
+		window.history.back()
+	}
+</script>
+{% endblock %}

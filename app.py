@@ -67,13 +67,13 @@ finally:
 
             # Ensures user entered a username and password
             if not username or not password:
-                return "Enter a username and password to continue!"
+                return render_template("error.html", message="Enter a username and password to continue!")
             # Ensures username exists
             if not check_username:
-                return "Invalid username!"
+                return render_template("error.html", message="Invalid username!")
             # Ensures password is correct
             if password != check_username[0][2]:
-                return "Invalid password!"
+                return render_template("error.html", message="Invalid password!")
 
             # stores current user info
             session["user_id"] = check_username[0][0]
@@ -130,11 +130,11 @@ finally:
 
             # Ensures user entered a brewery
             if new_brewery is None:
-                return "Invalid brewery!"
+                return render_template("error.html", message="Invalid brewery!")
 
             # Handles duplicate brewery name
             if row is not None:
-                return "That brewery is already listed!"
+                return render_template("error.html", message="That brewery is already listed!")
             cursor.execute("INSERT INTO breweries (name, distributor, state, website, added_by) \
                             VALUES (%s, %s, %s, %s, %s)",
                             (new_brewery["name"], 
@@ -200,7 +200,7 @@ finally:
             cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
             brewery_id = cursor.fetchone()
             if brewery_id is None:
-                return "Brewery not found."
+                return render_template("error.html", message="Brewery not found.")
 
             # deletes beers associated with brewery from beers
 
@@ -219,7 +219,7 @@ finally:
 
             # Handles invalide brewery names
             if selected_brewery is None:
-                return "Brewery not found!"
+                return render_template("error.html", message="Brewery not found!")
             brewery_id = selected_brewery[0]
 
             # Selects and formats the date the brewery was added
@@ -308,7 +308,7 @@ finally:
             # Ensures new beer isn't a duplicate
             for beer in current_beers:
                 if new_beer == beer[0]:
-                    return "Beer already listed!"
+                    return render_template("error.html", message="Beer already listed!")
            
             # Adds new beer to database
             cursor.execute("INSERT INTO beers (name, brewery_id) \
