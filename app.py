@@ -149,13 +149,26 @@ def breweries():
         breweries = cursor.fetchall()
         return render_template('viewall.html', breweries=breweries)
 
-@app.route('/search/')
+@app.route('/search/brewery')
 @login_required
 def search():
     """Displays search page"""
+
+    # Selects brewery names for autocomplete
     cursor.execute("SELECT name FROM breweries")
     breweries = cursor.fetchall()
     return render_template('search.html', breweries=breweries)
+
+@app.route('/search/beer')
+@login_required
+def search_beers():
+    """Displays beer search page"""
+
+    # Selects brewery and beer names for autcomplete
+    cursor.execute("SELECT breweries.name, beers.name FROM breweries INNER JOIN beers ON breweries.id = beers.brewery_id")
+    beers = cursor.fetchall()
+    print(beers)
+    return render_template('beer_search.html', beers=beers)
 
 @app.route('/results/')
 @login_required
@@ -337,6 +350,7 @@ def delete_beer():
         connection.commit()
         cursor.execute("SELECT name FROM breweries WHERE id = %i" % brewery_id)
         brewery = cursor.fetchone()
+        flash(delete + " deleted!")
         return redirect("/breweries/%s" % brewery)
     else:
         brewery = request.args.get("brewery")
