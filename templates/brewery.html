@@ -33,19 +33,23 @@
 			</div>
 			<div class="col-sm col-lg-3 text-left mr-auto ml-auto">
 				<div class="row">
-					<a class="btn btn-primary btn-lg btn-block" href="{{ brewery }}/update">Update distributor</a>
-					<a class="btn btn-primary btn-lg btn-block" href="{{ brewery }}/beers/new">Add a beer</a>
-					<a class="btn btn-primary btn-lg btn-block" href="/delete_beer/?brewery={{ brewery }}">Delete a beer</a>
+					<div class="col">
+						<a class="btn btn-primary btn-lg btn-block" href="{{ brewery }}/update">Update distributor</a>
+						<a class="btn btn-primary btn-lg btn-block" href="{{ brewery }}/beers/new">Add a beer</a>
+						<a class="btn btn-primary btn-lg btn-block" href="/delete_beer/?brewery={{ brewery }}">Delete a beer</a>
+					</div>
 				</div>
 				<div class="row">
-					<div class="container p-3 border mb-2 mt-2">
-						<ul class="list-unstyled m-0">
-							<li>Location: {% if location %} {{ location }} {% else %} N/A {% endif %}</li>
-							<li>Website: {% if website %}<a href="{{ website }}">{{ website }}</a>{% else %} N/A {% endif %}</li>
-							{% if added_by %}
-							<li><em>Added by {{ added_by[0] }} {% if date %} on {{ date[0] }} {% endif %}</em></li>
-							{% endif %}
-						</ul>								
+					<div class="col">
+						<div class="container p-3 border mb-2 mt-2">
+							<ul class="list-unstyled m-0">
+								<li>Location: {% if location %} {{ location }} {% else %} N/A {% endif %}</li>
+								<li>Website: {% if website %}<a href="{{ website }}">{{ website }}</a>{% else %} N/A {% endif %}</li>
+								{% if added_by %}
+								<li><em>Added by {{ added_by[0] }} {% if date %} on {{ date[0] }} {% endif %}</em></li>
+								{% endif %}
+							</ul>								
+						</div>
 					</div>
 				</div>
 			</div>
