@@ -17,9 +17,16 @@
 
 	<script type="text/javascript">
 		$( document ).ready( function() {
+			// Decodes html
+			function decodeHtml(html) {
+    			var txt = document.createElement("textarea");
+    			txt.innerHTML = html;
+    			return txt.value;
+				}
+
 			const availableBeers = [
 				{% for beer in beers %}
-					'{{ beer[0] }} - {{ beer[1] }}', 
+					decodeHtml('{{ beer[1] }}'), 
 				{% endfor %}
 			];
 			$( "#beer" ).autocomplete({

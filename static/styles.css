@@ -1,0 +1,65 @@
+body {
+	text-align: center;
+	align-items: center;
+}
+footer {
+	color: grey;
+	font-size: 12px;
+	position: relative;
+	bottom: 0;
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
+}
+
+.flashes {
+	padding: 1em
+}
+
+.flashes button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: .65em 1em;
+}
+
+.flashes ul {
+	margin: 0;
+}
+
+main {
+	height: 100vh;
+	position: relative;
+}
+
+main .card {
+	padding: 10%;
+	-webkit-box-shadow: 10px 10px 37px 5px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 37px 5px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 37px 5px rgba(0,0,0,0.75);
+}
+
+main .form-control {
+	display: inline-block;
+	width: auto;
+}
+
+main #login-bg {
+	background-image: url(https://source.unsplash.com/nhX8QhXMBkM);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.table>tbody .hidden-row {
+   padding: 0 8px;
+}
+
+/*main .splash {
+	display: block;
+	height: 100%;
+	width: 100%;
+	background-image: url(https://source.unsplash.com/nhX8QhXMBkM);
+	z-index: -100;
+}*/

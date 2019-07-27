@@ -167,17 +167,34 @@ def search_beers():
     # Selects brewery and beer names for autcomplete
     cursor.execute("SELECT breweries.name, beers.name FROM breweries INNER JOIN beers ON breweries.id = beers.brewery_id")
     beers = cursor.fetchall()
-    print(beers)
     return render_template('beer_search.html', beers=beers)
 
 @app.route('/results/')
 @login_required
 def results():
     """Displays search results"""
-    searched = request.args.get("brewery")
-    cursor.execute("SELECT name FROM breweries WHERE name ILIKE '%%%s%%'" % searched)
-    results = cursor.fetchall()
-    return render_template("results.html", searched=searched, results=results)
+
+    # Handles brewery searches
+    if request.args.get("brewery"):
+        searched = request.args.get("brewery")
+        cursor.execute("SELECT name FROM breweries WHERE name ILIKE $$%%%s%%$$" % searched)
+        results = cursor.fetchall()
+
+        # if only one brewery is found, redirect to the appropriate page
+        if len(results) == 1:
+            return redirect('/breweries/%s' % results[0][0])
+        return render_template("results.html", searched=searched, results=results)
+
+    # Handles beer searches
+    if request.args.get("beer"):
+        searched = request.args.get("beer")
+        cursor.execute("SELECT beers.name, breweries.name \
+                       FROM breweries \
+                       INNER JOIN beers \
+                       ON breweries.id = beers.brewery_id \
+                       WHERE beers.name ILIKE $$%%%s%%$$" % searched)
+        results = cursor.fetchall()
+        return render_template("beer_results.html", searched=searched, results=results)
 
 @app.route('/breweries/<brewery>/update', methods=["GET"])
 @login_required
