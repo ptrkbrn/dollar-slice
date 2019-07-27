@@ -6,7 +6,7 @@
 	<h1 class="mt-5 mb-5">Search for a Brewery</h1>
 	<form class="needs-validation mb-5" action="/results/", method="get" novalidate>
 		<div class="form-group">
-			<input class="form-control" type="text" name="brewery" autofocus autocomplete="off" placeholder="Search" required>
+			<input class="form-control" type="text" id="brewery" name="brewery" autofocus autocomplete="off" placeholder="Search" required>
 			<div class="invalid-feedback">
 				Enter a brewery name
 			</div>
@@ -14,4 +14,17 @@
 			<button class="btn btn-danger" type="submit">Search</button>
 	</form>
 	<a href="/">Back</a>
+
+	<script type="text/javascript">
+		$( document ).ready( function() {
+			const availableBreweries = [
+				{% for brewery in breweries %}
+					'{{ brewery[0] }}', 
+				{% endfor %}
+			];
+			$( "#brewery" ).autocomplete({
+				source: availableBreweries
+			});
+		});
+	</script>
 	{% endblock %}
