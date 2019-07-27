@@ -336,31 +336,3 @@ def delete_brewery():
     cursor.execute("SELECT name FROM breweries ORDER BY name ASC")
     breweries = cursor.fetchall()
     return render_template("delete_brewery.html", breweries=breweries)
-
-@app.route("/delete_beer/", methods=["GET", "POST"])
-@login_required
-def delete_beer():
-    """Removes beer from the database"""
-    if request.method == "POST":
-        delete = request.form.get("delete")
-        print(delete)
-        cursor.execute("SELECT brewery_id FROM beers WHERE name = $$%s$$" % delete)
-        brewery_id = cursor.fetchone()
-        cursor.execute("DELETE FROM beers WHERE name = $$%s$$" % delete)
-        connection.commit()
-        cursor.execute("SELECT name FROM breweries WHERE id = %i" % brewery_id)
-        brewery = cursor.fetchone()
-        flash(delete + " deleted!")
-        return redirect("/breweries/%s" % brewery)
-    else:
-        brewery = request.args.get("brewery")
-        cursor.execute("SELECT id from breweries WHERE name = $$%s$$" % brewery)
-        brewery_id = cursor.fetchone()
-        print(brewery_id[0])
-        cursor.execute("SELECT beers.name \
-                       FROM beers, breweries \
-                       WHERE brewery_id = %i \
-                       GROUP BY beers.name" % brewery_id[0])
-        beers = cursor.fetchall()
-        print(beers)
-        return render_template("delete_beer.html", brewery=brewery, beers=beers)
