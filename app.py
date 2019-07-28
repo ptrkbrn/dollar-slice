@@ -218,8 +218,8 @@ def brewery_page(brewery):
         new_distributor = request.form.get("new_distributor")
         print(new_distributor, brewery)
         cursor.execute("UPDATE breweries \
-                        SET distributor = %s \
-                        WHERE name = %s", (new_distributor, brewery))
+                        SET distributor = %s, updated_by = %s \
+                        WHERE name = %s", (new_distributor, session["user_id"], brewery))
         connection.commit()
         flash(brewery + " distributor updated to " + new_distributor + "!")
         return redirect('/breweries')
@@ -268,7 +268,13 @@ def brewery_page(brewery):
             added_by = cursor.fetchone()
         else:
             added_by = None
-
+        if selected_brewery[4] is not None:
+            cursor.execute("SELECT username \
+                           FROM users \
+                           WHERE id = %i" % selected_brewery[4])
+            updated_by = cursor.fetchone()
+        else:
+            updated_by = None
         # Uses brewery id to fetch associated beers
         cursor.execute("SELECT name \
                        FROM beers \
@@ -283,6 +289,7 @@ def brewery_page(brewery):
                                website=selected_brewery[5],
                                location=selected_brewery[6],
                                added_by=added_by,
+                               updated_by=updated_by,
                                date=date
                                )
 

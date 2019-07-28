@@ -48,6 +48,9 @@
 								{% if added_by %}
 								<li><em>Added by {{ added_by[0] }} {% if date %} on {{ date[0] }} {% endif %}</em></li>
 								{% endif %}
+								{% if updated_by %}
+								<li><em>Updated by {{ updated_by[0] }}</em></li>
+								{% endif %}
 							</ul>								
 						</div>
 					</div>
