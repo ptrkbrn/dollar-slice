@@ -317,7 +317,8 @@ def show_beer_delete_form(brewery):
 @login_required
 def beer_page(brewery, beer):
     """Beer routes"""
-    if request.method == "DELETE":        cursor.execute("DELETE FROM beers WHERE name = $$%s$$" % beer)
+    if request.method == "DELETE":
+        cursor.execute("DELETE FROM beers WHERE name = $$%s$$" % beer)
         connection.commit()
         flash(beer + " deleted!")
         return redirect("/breweries/%s" % brewery)

@@ -123,15 +123,13 @@ $("#delete-beer-form").submit(function(e){
 $(".delete-beer-btn").click(function deleteThisBeer(){
   let brewery = $(document).find('h1').text();
   let beer = $( "#delete" ).val();
-  console.log(brewery)
-  console.log(beer)
   $.ajax({
     url: '/breweries/' + brewery + '/beers/' + beer,
     type: "DELETE",
     data: {beer: beer},
     dataType: "html",
     success: function(){
-      window.location.load('/breweries/' + brewery);
+      window.location.replace('/breweries/' + brewery);
     }
   });
 });
@@ -147,6 +145,28 @@ $(".delete-beer").click(function deleteBeer(){
     success: function(){
       window.location.replace('/breweries/' + brewery);
       alert(beer + " deleted!");
+    }
+  });
+});
+
+// Logic for deleteing beer via beer delete form
+
+// Prevents form submission
+$("#distro-update-form").submit(function(e){
+    return false;
+});
+
+$("#distro-update-btn").click(function deleteThisBeer(){
+  let brewery = $(document).find('h1').text();
+  let distributor = $( "#select-distributor" ).val();
+  $.ajax({
+    url: '/breweries/' + brewery,
+    type: "PUT",
+    data: {new_distributor: distributor},
+    dataType: "html",
+    success: function(){
+      window.location.replace('/breweries/' + brewery)
+      alert(brewery + " distributor updated to " + distributor + "!");
     }
   });
 });
