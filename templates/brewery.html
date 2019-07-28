@@ -21,13 +21,21 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for beer in beers %}
+						{% if beers|length == 0 %}
 						<tr>
 							<td></td>
-							<td><a href="{{ brewery }}/beers/{{ beer[0] }}">{{ beer[0] }}</a></td>
+							<td>Nothing here yet!</td>
 							<td></td>
 						</tr>
-						{% endfor %}			
+						{% else %}
+							{% for beer in beers %}
+							<tr>
+								<td></td>
+								<td><a href="{{ brewery }}/beers/{{ beer[0] }}">{{ beer[0] }}</a></td>
+								<td></td>
+							</tr>
+							{% endfor %}
+						{% endif %}	
 					</tbody>
 				</table>
 			</div>
