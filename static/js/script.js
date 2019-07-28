@@ -113,12 +113,40 @@ $( document ).ready(function(){
   });
 });
 
-// AJAX request for deleting beer
+// Scripts for deleteing beer via beer delete form
+
+// Prevents form submission
+$("#delete-beer-form").submit(function(e){
+    return false;
+});
+
+$(".delete-beer-btn").click(function deleteThisBeer(){
+  let brewery = $(document).find('h1').text();
+  let beer = $( "#delete" ).val();
+  console.log(brewery)
+  console.log(beer)
+  $.ajax({
+    url: '/breweries/' + brewery + '/beers/' + beer,
+    type: "DELETE",
+    data: {beer: beer},
+    dataType: "html",
+    success: function(){
+      window.location.load('/breweries/' + brewery);
+    }
+  });
+});
+
+// AJAX request for deleting beer via beer page
 $(".delete-beer").click(function deleteBeer(){
   let brewery = $(document).find('h1').text();
   let beer = $(document).find('h2').text();
-  $.post('/delete_beer', {delete: beer}, function(){
-    window.location.replace('/breweries/' + brewery);
-    alert(beer + " deleted!");
+  $.ajax({
+    url: '/breweries/' + brewery + '/beers/' + beer,
+    type: "DELETE",
+    data: {beer: beer},
+    success: function(){
+      window.location.replace('/breweries/' + brewery);
+      alert(beer + " deleted!");
+    }
   });
 });

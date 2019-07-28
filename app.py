@@ -196,7 +196,7 @@ def results():
         results = cursor.fetchall()
         return render_template("beer_results.html", searched=searched, results=results)
 
-@app.route('/breweries/<brewery>/update', methods=["GET"])
+@app.route('/breweries/<brewery>/update')
 @login_required
 def update(brewery):
     """Shows form to update distributor for given brewery"""
@@ -298,10 +298,30 @@ def distributor_page(distributor):
     return render_template('distributor.html', breweries=breweries,
                            distributor=breweries[0][2])
 
-@app.route('/breweries/<brewery>/beers/<beer>')
+@app.route('/breweries/<brewery>/beers/delete')
+@login_required
+def show_beer_delete_form(brewery):
+    """Shows beer deletion form"""
+    cursor.execute("SELECT id from breweries WHERE name = $$%s$$" % brewery)
+    brewery_id = cursor.fetchone()
+    print(brewery_id[0])
+    cursor.execute("SELECT beers.name \
+                   FROM beers, breweries \
+                   WHERE brewery_id = %i \
+                   GROUP BY beers.name" % brewery_id[0])
+    beers = cursor.fetchall()
+    print(beers)    
+    return render_template("delete_beer.html", brewery=brewery, beers=beers)
+
+@app.route('/breweries/<brewery>/beers/<beer>', methods=["GET", "DELETE"])
 @login_required
 def beer_page(brewery, beer):
-    """Shows beer page"""
+    """Beer routes"""
+    if request.method == "DELETE":        cursor.execute("DELETE FROM beers WHERE name = $$%s$$" % beer)
+        connection.commit()
+        flash(beer + " deleted!")
+        return redirect("/breweries/%s" % brewery)
+
     # fetches db row for selected beer
     cursor.execute("SELECT * FROM beers WHERE name = $$%s$$" % beer)
     beername = cursor.fetchone()
@@ -312,12 +332,11 @@ def beer_page(brewery, beer):
     url_for('beer_page', brewery=brewery[0], beer=beername)
     return render_template('beer.html', beername=beername, brewery=brewery[0])
 
-# add a beer route
 @app.route('/breweries/<brewery>/beers/new')
 @login_required
 def add_beer(brewery):
+    """Shows new beer form"""
 
-    # Shows new beer form
     return render_template("add_beer.html", brewery=brewery)
 
 @app.route('/breweries/<brewery>/beers', methods=["GET", "POST"])
@@ -328,6 +347,16 @@ def beers(brewery):
     # Beer get route
     if request.method == "POST":
         new_beer = request.form.get("new_beer")
+        price = request.form.get("price")
+        if not price:
+            price = None
+        print(price)
+        abv = request.form.get("abv")
+        if not abv:
+            abv = None
+        style = request.form.get("style")
+        if not style:
+            style = None
         cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
         brewery_id = cursor.fetchone()
 
@@ -341,8 +370,8 @@ def beers(brewery):
                 return render_template("error.html", message="Beer already listed!")
        
         # Adds new beer to database
-        cursor.execute("INSERT INTO beers (name, brewery_id) \
-                        VALUES ($$%s$$, %s)" % (new_beer, brewery_id[0]))
+        cursor.execute("INSERT INTO beers (name, brewery_id, price, style, abv) \
+                        VALUES (%s, %s, %s, %s, %s)", (new_beer, brewery_id[0], price, style, abv))
         connection.commit()
         flash(new_beer + " added to " + brewery + "!")
         return redirect('/breweries/%s' % brewery)

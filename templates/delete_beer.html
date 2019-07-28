@@ -7,7 +7,7 @@
 	{% if beers|length < 1 %}
 		<p>No beers added yet!</p>
 	{% else %}
-		<form action="/delete_beer" method="post" class="mb-5">
+		<form class="mb-5" id="delete-beer-form">
 			<div class="form-group">
 				<label for="delete">Select a beer to delete: </label>
 				<select class="form-control" id="delete" name="delete">
@@ -16,8 +16,8 @@
 					{% endfor %}
 				</select>
 			</div>
-			<button class="btn btn-primary" type="submit">Delete</button>
+			<button class="btn btn-primary delete-beer-btn" type="submit">Delete</button>
 		</form>
-		<a href="/breweries/{{ brewery }}">Back</a>
 	{% endif %}
+		<a href="/breweries/{{ brewery }}">Back</a>
 	{% endblock %}
