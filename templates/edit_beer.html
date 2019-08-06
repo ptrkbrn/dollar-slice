@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+	{% block title %}Edit {{ brewery }} - {{ beer }}{% endblock %}
+	
+	{% block main %}
+	<h1 class="mt-5 mb-5">{{ brewery }}</h1>
+	<h2 class="mt-5 mb-5">{{ beer }}</h2>
+	<form class="m-5 edit-beer" action="/breweries/{{ brewery }}/beers">
+		<div class="form-group">
+		<div class="form-group m-1">
+			<input class="form-control" type="text" id="new_name" name="new_name" autocomplete="off" placeholder="{{ edit_beer[1] }}">
+		</div>
+		<div class="form-group m-1">
+			<input class="form-control" type="text" id="new_price" name="new_price" autocomplete="off" placeholder="{% if edit_beer[5] %}{{ edit_beer[5] }}{% else %}Price{% endif %}">
+		</div>
+		<div class="form-group m-1">
+			<input class="form-control" type="text" id="new_abv" name="new_abv" autocomplete="off" placeholder="{% if edit_beer[4] %}{{ edit_beer[4] }}{% else %}ABV{% endif %}">
+		</div>
+		<div class="form-group mt-1 mb-3">
+			<input class="form-control" type="text" id="new_style" name="new_style" autocomplete="off" placeholder="{% if edit_beer[3] %}{{ edit_beer[3] }}{% else %}Style{% endif %}">
+		</div>
+		<button class="btn btn-primary edit-beer-btn" type="submit">Update</button>
+	</form>
+	<a href="/breweries/{{ brewery }}">Back</a>
+	{% endblock %}

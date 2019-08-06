@@ -208,7 +208,7 @@ def update(brewery):
                            brewery=selected_brewery[0],
                            distributors=distributors)
 
-@app.route('/breweries/<brewery>', methods=["GET", "POST", "DELETE", "PUT"])
+@app.route('/breweries/<brewery>', methods=["GET", "POST", "DELETE", "PUT", "PATCH"])
 @login_required
 def brewery_page(brewery):
     """Brewery update routes"""
@@ -320,7 +320,7 @@ def show_beer_delete_form(brewery):
     print(beers)    
     return render_template("delete_beer.html", brewery=brewery, beers=beers)
 
-@app.route('/breweries/<brewery>/beers/<beer>', methods=["GET", "DELETE"])
+@app.route('/breweries/<brewery>/beers/<beer>', methods=["GET", "DELETE", "PATCH"])
 @login_required
 def beer_page(brewery, beer):
     """Beer routes"""
@@ -330,6 +330,40 @@ def beer_page(brewery, beer):
         flash(beer + " deleted!")
         return redirect("/breweries/%s" % brewery)
 
+    if request.method == "PATCH":
+        cursor.execute("SELECT id FROM beers WHERE name = $$%s$$" % beer)
+        beer_id = cursor.fetchone();
+        new_name = request.form.get("new_name")
+        new_style = request.form.get("new_style")
+        new_abv = request.form.get("new_abv")
+        new_price = request.form.get("new_price")
+        print(new_name, new_style, new_abv, new_price)
+
+        if new_name:
+            cursor.execute("UPDATE beers \
+                            SET name = %s \
+                            WHERE id = %s",
+                            (new_name, beer_id))
+            connection.commit()
+        if new_style:
+            cursor.execute("UPDATE beers \
+                            SET style = %s \
+                            WHERE id = %s",
+                            (new_style, beer_id))
+            connection.commit()
+        if new_abv:
+            cursor.execute("UPDATE beers \
+                            SET abv = %s \
+                            WHERE id = %s",
+                            (new_abv, beer_id))
+            connection.commit()
+        if new_price:
+            cursor.execute("UPDATE beers \
+                            SET price = %s \
+                            WHERE id = %s",
+                            (new_price, beer_id))
+            connection.commit()
+        return redirect("/breweries/%s" % brewery)
     # fetches db row for selected beer
     cursor.execute("SELECT * FROM beers WHERE name = $$%s$$" % beer)
     beername = cursor.fetchone()
@@ -346,6 +380,17 @@ def add_beer(brewery):
     """Shows new beer form"""
 
     return render_template("add_beer.html", brewery=brewery)
+
+@app.route('/breweries/<brewery>/beers/<beer>/edit')
+@login_required
+def edit_beer(brewery, beer):
+    """Edit beer info"""
+    cursor.execute("SELECT * FROM beers WHERE name = $$%s$$" % beer)
+    edit_beer = cursor.fetchall()
+    print(edit_beer)
+    return render_template("edit_beer.html", beer=beer, brewery=brewery, edit_beer=edit_beer[0])
+
+
 
 @app.route('/breweries/<brewery>/beers', methods=["GET", "POST"])
 @login_required

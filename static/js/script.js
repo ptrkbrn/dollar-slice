@@ -170,3 +170,28 @@ $("#distro-update-btn").click(function deleteThisBeer(){
     }
   });
 });
+
+// Edit info for existing beers
+$(".edit-beer").submit(function(e){
+    return false;
+});
+
+$(".edit-beer-btn").click(function editBeer(){
+  console.log("click!")
+  let brewery = $(document).find('h1').text();
+  let beer = $(document).find('h2').text();
+  let new_name = $( "#new_name" ).val();
+  let new_style = $( "#new_style" ).val();
+  let new_abv = $( "#new_abv" ).val();
+  let new_price = $( "#new_price" ).val();
+  console.log(new_name, new_style, new_abv, new_price)
+  $.ajax({
+    url: '/breweries/' + brewery + '/beers/' + beer,
+    type: "PATCH",
+    data: {new_name: new_name, new_style: new_style, new_abv: new_abv, new_price: new_price},
+    dataType: "text",
+    success: function(){
+      window.location.replace('/breweries/' + brewery)
+    }
+  });
+});
