@@ -51,7 +51,9 @@ cursor = connection.cursor()
 @login_required
 def index():
     """Displays index page"""
-    return render_template('index.html')
+    cursor.execute("SELECT username FROM users WHERE id = %s" % session["user_id"])
+    current_user = cursor.fetchone()
+    return render_template('index.html', current_user=current_user[0])
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
