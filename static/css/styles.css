@@ -60,6 +60,13 @@ main #login-bg {
 	color: white !important;
 }
 
+@media only screen and (max-width: 991px) {
+	#logout {
+		color: white !important;
+		background-color: #3498DB !important;
+		border: none !important;
+	}
+
 /*main .splash {
 	display: block;
 	height: 100%;
