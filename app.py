@@ -107,7 +107,7 @@ def add_brewery():
     """Allows user to add breweries to the database"""
     return render_template('add.html')
 
-@app.route('/breweries', methods=['GET', 'POST', 'DELETE', 'PUT'])
+@app.route('/breweries', methods=['GET', 'POST', 'DELETE', 'PUT', 'PATCH'])
 @login_required
 def breweries():
     """Brewery index route"""
@@ -210,6 +210,14 @@ def update(brewery):
                            brewery=selected_brewery[0],
                            distributors=distributors)
 
+@app.route('/breweries/<brewery>/edit')
+@login_required
+def edit_brewery_info(brewery):
+    """Shows form to edit info for existing brewery"""
+    cursor.execute("SELECT * FROM breweries WHERE name = $$%s$$" % brewery)
+    edit_brewery = cursor.fetchall()
+    return render_template('edit_brewery.html', edit_brewery=edit_brewery[0])
+
 @app.route('/breweries/<brewery>', methods=["GET", "POST", "DELETE", "PUT", "PATCH"])
 @login_required
 def brewery_page(brewery):
@@ -225,6 +233,44 @@ def brewery_page(brewery):
         connection.commit()
         flash(brewery + " distributor updated to " + new_distributor + "!")
         return redirect('/breweries')
+
+    # Edits info for existing brewery
+    if request.method == "PATCH":
+        cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
+        brewery_id = cursor.fetchone()
+        new_name = request.form.get("new_name")
+        new_distributor = request.form.get("new_distributor")
+        new_website = request.form.get("new_website")
+        new_state = request.form.get("new_state")
+        if new_name:
+            cursor.execute("UPDATE breweries \
+                            SET name = %s \
+                            WHERE id = %s",
+                            (new_name, brewery_id))
+            connection.commit()
+        if new_distributor:
+            cursor.execute("UPDATE breweries \
+                            SET distributor = %s \
+                            WHERE id = %s",
+                            (new_distributor, brewery_id))
+            connection.commit()
+        if new_website:
+            cursor.execute("UPDATE breweries \
+                            SET website = %s \
+                            WHERE id = %s",
+                            (new_website, brewery_id))
+            connection.commit()
+        if new_state:
+            cursor.execute("UPDATE breweries \
+                            SET state = %s \
+                            WHERE id = %s",
+                            (new_state, brewery_id))
+            connection.commit()
+        cursor.execute("UPDATE breweries \
+                        SET updated_by = %s \
+                        WHERE id = %s",
+                        (session["user_id"], brewery_id))
+        return redirect("/breweries")
 
     # Brewery delete route
     if request.method == "DELETE":

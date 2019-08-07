@@ -177,7 +177,6 @@ $(".edit-beer").submit(function(e){
 });
 
 $(".edit-beer-btn").click(function editBeer(){
-  console.log("click!")
   let brewery = $(document).find('h1').text();
   let beer = $(document).find('h2').text();
   let new_name = $( "#new_name" ).val();
@@ -192,6 +191,30 @@ $(".edit-beer-btn").click(function editBeer(){
     dataType: "text",
     success: function(){
       window.location.replace('/breweries/' + brewery)
+    }
+  });
+});
+
+// Edit info for existing brewery
+$(".edit-brewery").submit(function(e){
+    return false;
+});
+
+$(".edit-brewery-btn").click(function editBeer(){
+  console.log("click!")
+  let brewery = $(document).find('h1').text();
+  let new_name = $( "#new_name" ).val();
+  let new_distributor = $( "#new_style" ).val();
+  let new_website = $( "#new_website" ).val();
+  let new_state = $( "#new_state" ).val();
+  console.log(new_name, new_distributor, new_website, new_state)
+  $.ajax({
+    url: '/breweries/' + brewery,
+    type: "PATCH",
+    data: {new_name: new_name, new_distributor: new_distributor, new_website: new_website, new_state: new_state},
+    dataType: "text",
+    success: function(){
+      window.location.replace('/breweries')
     }
   });
 });
