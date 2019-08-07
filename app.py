@@ -3,6 +3,7 @@ import psycopg2
 from flask_session import Session
 from tempfile import mkdtemp
 from helpers import login_required, lookup
+from werkzeug.security import generate_password_hash, check_password_hash
 # from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -59,6 +60,7 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
         cursor.execute("SELECT * FROM users WHERE username = $$%s$$" % username)
+        print(generate_password_hash(password))
         check_username = cursor.fetchall()
         # clears any existing user_id
         session.clear()
@@ -70,7 +72,7 @@ def login():
         if not check_username:
             return render_template("error.html", message="Invalid username!")
         # Ensures password is correct
-        if password != check_username[0][2]:
+        if not check_password_hash(check_username[0][2], password):
             return render_template("error.html", message="Invalid password!")
 
         # stores current user info
