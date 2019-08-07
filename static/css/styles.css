@@ -56,6 +56,10 @@ main #login-bg {
    padding: 0 8px;
 }
 
+#logout:hover {
+	color: white !important;
+}
+
 /*main .splash {
 	display: block;
 	height: 100%;
