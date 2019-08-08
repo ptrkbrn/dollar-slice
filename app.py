@@ -20,7 +20,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 #configures sqlalchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/crws_app'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/crws_app.db'
 
 # disables sqlalchemy modification tracking for improved perfomance
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -47,11 +47,8 @@ def after_request(response):
 # connects to database
 DATABASE_URL = os.environ['DATABASE_URL']
 
-connection = psycopg2.connect(user="patrickbreen",
-                              password="hustlebone$69",
-                              host="127.0.0.1",
-                              port="5432",
-                              database="postgresql://localhost/crws_app")
+connection = psycopg2.connect(DATABASE_URL, 
+                              sslmode='require')
 
 cursor = connection.cursor()
 
