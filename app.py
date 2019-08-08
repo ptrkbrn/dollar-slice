@@ -4,10 +4,11 @@ from flask_session import Session
 from tempfile import mkdtemp
 from helpers import login_required, lookup
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_heroku import Heroku
 # from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-
+heroku = Heroku(app)
 # Configure app
 app.config.from_object(__name__)
 
@@ -485,3 +486,7 @@ def delete_brewery():
     cursor.execute("SELECT name FROM breweries ORDER BY name ASC")
     breweries = cursor.fetchall()
     return render_template("delete_brewery.html", breweries=breweries)
+
+if __name__ == ' __main__':
+    #app.debug = True
+    app.run()
