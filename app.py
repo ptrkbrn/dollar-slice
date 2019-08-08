@@ -6,7 +6,7 @@ from tempfile import mkdtemp
 from helpers import login_required, lookup
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_heroku import Heroku
-# from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 heroku = Heroku(app)
@@ -19,12 +19,12 @@ app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
-# #configures sqlalchemy
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/crws_app'
+#configures sqlalchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/crws_app'
 
-# # disables sqlalchemy modification tracking for improved perfomance
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# db = SQLAlchemy(app)
+# disables sqlalchemy modification tracking for improved perfomance
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 # @app.route('/')
 # def hello_world():
