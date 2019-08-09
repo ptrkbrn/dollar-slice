@@ -43,6 +43,7 @@ main .card {
 main .form-control {
 	display: inline-block;
 	width: auto;
+	max-width: auto;
 }
 
 main #login-bg {
