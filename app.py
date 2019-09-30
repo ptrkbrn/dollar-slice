@@ -47,13 +47,10 @@ def after_request(response):
     return response
 
 # connects to database
-# DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = os.environ['DATABASE_URL']
 
-connection = psycopg2.connect(user="patrickbreen",
-                              password="hustlebone$69",
-                              host="127.0.0.1",
-                              port="5432",
-                              database="crws_app")
+connection = psycopg2.connect(DATABASE_URL, 
+                              sslmode='require')
 
 cursor = connection.cursor()
 
