@@ -4,7 +4,7 @@
 	
 	{% block main %}
 	<h1 class="mt-5 mb-5">{{ brewery }}</h1>
-	<form class="needs-validation m-5" action="/breweries/{{ brewery }}/beers" method="post" novalidate>
+	<form class="needs-validation m-5" action="/breweries/{{ brewery }}/beers" method="post" enctype="multipart/form-data" novalidate>
 		<div class="form-group">
 			<input class="form-control" type="text" name="new_beer" autofocus autocomplete="off" placeholder="Beer name" required>
 			<div class="invalid-feedback">
@@ -17,8 +17,11 @@
 		<div class="form-group m-1">
 			<input class="form-control" type="text" name="abv" autocomplete="off" placeholder="ABV">
 		</div>
-		<div class="form-group mt-1 mb-3">
+		<div class="form-group mt-1">
 			<input class="form-control" type="text" name="style" autocomplete="off" placeholder="Style">
+		</div>
+		<div class="form-group mt-1 mb-3">
+			<input class="form-control" type="file" name="image" accept="image/png, image/jpg">
 		</div>
 		<button class="btn btn-primary" type="submit">Add beer</button>
 	</form>

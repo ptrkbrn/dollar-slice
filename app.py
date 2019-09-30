@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 import os
 import psycopg2
+import base64
+import random
 from flask_session import Session
 from tempfile import mkdtemp
 from helpers import login_required, lookup
@@ -45,10 +47,13 @@ def after_request(response):
     return response
 
 # connects to database
-DATABASE_URL = os.environ['DATABASE_URL']
+# DATABASE_URL = os.environ['DATABASE_URL']
 
-connection = psycopg2.connect(DATABASE_URL, 
-                              sslmode='require')
+connection = psycopg2.connect(user="patrickbreen",
+                              password="hustlebone$69",
+                              host="127.0.0.1",
+                              port="5432",
+                              database="crws_app")
 
 cursor = connection.cursor()
 
@@ -423,12 +428,16 @@ def beer_page(brewery, beer):
     # fetches db row for selected beer
     cursor.execute("SELECT * FROM beers WHERE name = $$%s$$" % beer)
     beername = cursor.fetchone()
-
+    if beername[6]:
+        cursor.execute("SELECT username FROM users WHERE id = %i" % beername[6])
+        user = cursor.fetchone()
+    else:
+        user = None
     # fetches appropriate brewery name
     cursor.execute("SELECT name FROM breweries WHERE id = %i" % beername[2])
     brewery = cursor.fetchone()
     url_for('beer_page', brewery=brewery[0], beer=beername)
-    return render_template('beer.html', beername=beername, brewery=brewery[0])
+    return render_template('beer.html', beername=beername, brewery=brewery[0], user=user)
 
 @app.route('/breweries/<brewery>/beers/new')
 @login_required
@@ -452,8 +461,8 @@ def edit_beer(brewery, beer):
 @login_required
 def beers(brewery):
     """Adds beer to the database"""
-
-    # Beer get route
+    user_id = session["user_id"];
+    # Beer post route
     if request.method == "POST":
         new_beer = request.form.get("new_beer")
         price = request.form.get("price")
@@ -466,6 +475,12 @@ def beers(brewery):
         style = request.form.get("style")
         if not style:
             style = None
+        image = request.form.get("image")
+        imgdata = request.files['image'].read()
+        filename = str(random.randint(0,10000)) + '.jpg'
+        with open("static/" + filename, "wb") as f:
+            f.write(imgdata)
+
         cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
         brewery_id = cursor.fetchone()
 
@@ -479,8 +494,8 @@ def beers(brewery):
                 return render_template("error.html", message="Beer already listed!")
        
         # Adds new beer to database
-        cursor.execute("INSERT INTO beers (name, brewery_id, price, style, abv) \
-                        VALUES (%s, %s, %s, %s, %s)", (new_beer, brewery_id[0], price, style, abv))
+        cursor.execute("INSERT INTO beers (name, brewery_id, price, style, abv, added_by, image) \
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)", (new_beer, brewery_id[0], price, style, abv, user_id, filename))
         connection.commit()
         flash(new_beer + " added to " + brewery + "!")
         return redirect('/breweries/%s' % brewery)
