@@ -4,7 +4,7 @@ import psycopg2
 import random
 import json
 import boto3
-import urllib
+import urllib.parse
 from flask_session import Session
 from tempfile import mkdtemp
 from helpers import login_required, lookup
@@ -49,10 +49,13 @@ def after_request(response):
     return response
 
 # connects to database
-DATABASE_URL = os.environ['DATABASE_URL']
+# DATABASE_URL = os.environ['DATABASE_URL']
 
-connection = psycopg2.connect(DATABASE_URL, 
-                              sslmode='require')
+connection = psycopg2.connect(user="patrickbreen",
+                              password="hustlebone$69",
+                              host="127.0.0.1",
+                              port="5432",
+                              database="crws_app")
 
 cursor = connection.cursor()
 
@@ -509,7 +512,7 @@ def sign_s3():
     file_name = request.args.get('file_name')
     file_type = request.args.get('file_type')
 
-    s3 = bota3.client('s3')
+    s3 = boto3.client('s3')
 
     presigned_post = s3.generate_presigned_post(
         Bucket = S3_BUCKET,
@@ -517,14 +520,14 @@ def sign_s3():
         Fields = {"acl": "public-read", "Content-Type": file_type},
         Conditions = [
         {"acl": "public-read"},
-        {"Content-Type": file_type}
+        {"Content-Type": file_type},
         ],
         ExpiresIn = 3600
     )
 
     return json.dumps({
         'data': presigned_post,
-        'url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, urllib.quote(file_name))
+        'url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, urllib.parse.quote(file_name))
     })
 
 if __name__ == ' __main__':

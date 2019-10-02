@@ -222,16 +222,20 @@ $(".edit-brewery-btn").click(function editBeer(){
 // image upload scripts
 
 (function() {
-  $( "#image_input" ).onchange = function(){
-    let files = $( "#image_input" ).files;
+  console.log("yup")
+  $( "#image_input" ).change(function(){
+    console.log("I'm wide awake!")
+    let files = $( "#image_input" ).prop('files');
     let file = files[0];
     getSignedRequest(file);
-  }
+    console.log("one down...")
+  });
 })();
 
 function getSignedRequest(file){
-  $.get( "/sign_s3?file_name="+file.name+"&file_type="+file.type, function(){
-    let response = JSON.parse(this.responseText);
+  $.get( "/sign_s3?file_name="+file.name+"&file_type="+file.type, function(data){
+    let response = JSON.parse(data);
+    console.log("and two...")
     uploadFile(file, response.data, response.url);
   });
 }
@@ -239,12 +243,18 @@ function getSignedRequest(file){
 function uploadFile(file, s3Data, url){
   let postData = new FormData();
   for(key in s3Data.fields){
-    postData.append(key, s3data.fields[key]);
+    postData.append(key, s3Data.fields[key]);
   }
   postData.append('file', file);
-  $( "#image_url" ) = url;
-
-  $.post(s3Data.url, postData);
+  $( "#image_url" ).value = url;
+  $.ajax({
+    type: "POST",
+    url: s3Data.url,
+    data: postData,
+    processData: false,
+    contentType: false,
+  })
+  console.log("all systems go.")
 }
 
 
