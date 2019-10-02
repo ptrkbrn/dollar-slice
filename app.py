@@ -5,6 +5,7 @@ import random
 import json
 import boto3
 import urllib.parse
+from botocore.client import Config
 from flask_session import Session
 from tempfile import mkdtemp
 from helpers import login_required, lookup
