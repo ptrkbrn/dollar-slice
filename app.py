@@ -509,7 +509,7 @@ def sign_s3():
     file_name = request.args.get('file_name')
     file_type = request.args.get('file_type')
 
-    s3 = boto3.client('s3')
+    s3 = boto3.client('s3', config = Config(signature_version = 's3v4'))
 
     presigned_post = s3.generate_presigned_post(
         Bucket = S3_BUCKET,
