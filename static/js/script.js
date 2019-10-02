@@ -246,7 +246,7 @@ function uploadFile(file, s3Data, url){
     postData.append(key, s3Data.fields[key]);
   }
   postData.append('file', file);
-  $( "#image_url" ).value = url;
+  $( "#image_url" ).val(url);
   $.ajax({
     type: "POST",
     url: s3Data.url,
