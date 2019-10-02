@@ -49,7 +49,7 @@ def after_request(response):
     return response
 
 # connects to database
-# DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = os.environ['DATABASE_URL']
 
 connection = psycopg2.connect(DATABASE_URL,
                               sslmode='require')
