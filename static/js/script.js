@@ -218,3 +218,32 @@ $(".edit-brewery-btn").click(function editBeer(){
     }
   });
 });
+
+// image upload scripts
+
+(function() {
+  $( "#image_input" ).onchange = function(){
+    let files = $( "#image_input" ).files;
+    let file = files[0];
+    getSignedRequest(file);
+  }
+})();
+
+function getSignedRequest(file){
+  $.get( "/sign_s3?file_name="+file.name+"&file_type="+file.type, function(){
+    let response = JSON.parse(this.responseText);
+    uploadFile(file, response.data, response.url);
+  });
+}
+
+function uploadFile(file, s3Data, url){
+  let postData = new FormData();
+  for(key in s3Data.fields){
+    postData.append(key, s3data.fields[key]);
+  }
+  postData.append('file', file);
+
+  $.post(s3Data.url, postData);
+}
+
+

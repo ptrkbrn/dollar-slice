@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 import os
 import psycopg2
-import base64
 import random
+import json
+import boto3
+import urllib
 from flask_session import Session
 from tempfile import mkdtemp
 from helpers import login_required, lookup
@@ -49,8 +51,8 @@ def after_request(response):
 # connects to database
 DATABASE_URL = os.environ['DATABASE_URL']
 
-connection = psycopg2.connect(DATABASE_URL, 
-                              sslmode='require')
+connection = psycopg2.connect(database=DATABASE_URL,
+                              sslmode=require)
 
 cursor = connection.cursor()
 
@@ -473,10 +475,7 @@ def beers(brewery):
         if not style:
             style = None
         image = request.form.get("image")
-        imgdata = request.files['image'].read()
-        filename = str(random.randint(0,10000)) + '.jpg'
-        with open("static/" + filename, "wb") as f:
-            f.write(imgdata)
+        filename = request.files['image'].name
 
         cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
         brewery_id = cursor.fetchone()
@@ -503,6 +502,31 @@ def delete_brewery():
     cursor.execute("SELECT name FROM breweries ORDER BY name ASC")
     breweries = cursor.fetchall()
     return render_template("delete_brewery.html", breweries=breweries)
+
+@app.route('/sign_s3/')
+def sign_s3():
+    S3_BUCKET = os.environ.get('S3_BUCKET')
+
+    file_name = request.args.get('file_name')
+    file_type = request.args.get('file_type')
+
+    s3 = bota3.client('s3')
+
+    presigned_post = s3.generate_presigned_post(
+        Bucket = S3_BUCKET,
+        Key = file_name,
+        Fields = {"acl": "public-read", "Content-Type": file_type},
+        Conditions = [
+        {"acl": "public-read"},
+        {"Content-Type": file_type}
+        ],
+        ExpiresIn = 3600
+    )
+
+    return json.dumps({
+        'data': presigned_post,
+        'url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, urllib.quote(file_name))
+    })
 
 if __name__ == ' __main__':
     #app.debug = True
