@@ -474,8 +474,7 @@ def beers(brewery):
         style = request.form.get("style")
         if not style:
             style = None
-        image = request.form.get("image")
-        filename = request.files['image'].name
+        filepath = request.form.get("image_url")
 
         cursor.execute("SELECT id FROM breweries WHERE name = $$%s$$" % brewery)
         brewery_id = cursor.fetchone()
@@ -491,7 +490,7 @@ def beers(brewery):
        
         # Adds new beer to database
         cursor.execute("INSERT INTO beers (name, brewery_id, price, style, abv, added_by, image) \
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)", (new_beer, brewery_id[0], price, style, abv, user_id, filename))
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)", (new_beer, brewery_id[0], price, style, abv, user_id, filepath))
         connection.commit()
         flash(new_beer + " added to " + brewery + "!")
         return redirect('/breweries/%s' % brewery)
