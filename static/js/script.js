@@ -253,6 +253,7 @@ function uploadFile(file, s3Data, url){
     data: postData,
     processData: false,
     contentType: false,
+    crossDomain: true,
   })
   console.log("all systems go.")
 }
