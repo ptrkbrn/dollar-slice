@@ -51,7 +51,7 @@ def after_request(response):
 # connects to database
 DATABASE_URL = os.environ['DATABASE_URL']
 
-connection = psycopg2.connect(database=DATABASE_URL,
+connection = psycopg2.connect(DATABASE_URL, 
                               sslmode='require')
 
 cursor = connection.cursor()
