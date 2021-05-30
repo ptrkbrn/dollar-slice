@@ -394,7 +394,7 @@ def beer_page(brewery, beer):
 
     if request.method == "PATCH":
         cursor.execute("SELECT id FROM beers WHERE name = $$%s$$" % beer)
-        beer_id = cursor.fetchone();
+        beer_id = cursor.fetchone()
         new_name = request.form.get("new_name")
         new_style = request.form.get("new_style")
         new_abv = request.form.get("new_abv")
@@ -462,7 +462,7 @@ def edit_beer(brewery, beer):
 @login_required
 def beers(brewery):
     """Adds beer to the database"""
-    user_id = session["user_id"];
+    user_id = session["user_id"]
     # Beer post route
     if request.method == "POST":
         new_beer = request.form.get("new_beer")
